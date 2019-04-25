@@ -114,4 +114,12 @@ public class Contacte {
 	public void addEmail(String email) {
 		this.emails.add(email);
 	}
+	
+	public void removeNumero(int num) {
+		this.nums.remove(num);
+	}
+	
+	public void removeEmail(String email) {
+		this.emails.remove(email);
+	}
 }
