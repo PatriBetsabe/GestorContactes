@@ -74,6 +74,23 @@ public class GestorContactes {
 		return resposta;
 
 	}
+	
+	// comprueba si el email del contacto existe
+		public boolean existeixEmail(String email) {
+			List<Contacte> contactes = this.getContactes();
+			boolean resposta = false;
+			for (Contacte c : contactes) {
+				ArrayList<String> emails = c.getEmail();
+				for (String e : emails) {
+					if (email.equals(e)) {
+						resposta = true;
+						break;
+					}
+				}
+			}
+			return resposta;
+
+		}
 
 	// mostrar ayuda (todos los comandos con su descripción)
 	public String mostraAjuda() {
@@ -132,6 +149,30 @@ public class GestorContactes {
 	// método que añade un email a un contacto existente o crea uno nuevo
 	// método que cambia a primera posicion el contacto pasado por parametro
 
+	// método que añade un email a un contacto existente o crea uno nuevo
+	public void afegeixEmail(String entrada) throws Exception {
+		// encontrar posicion email
+		String[] partes = entrada.split(" ");
+		String email = partes[partes.length-1];
+		System.out.println(email);
+		
+		
+		String nom = entrada.substring(14,entrada.indexOf(email));
+		System.out.println(nom);
+		
+		if (!existeixNom(nom)) {
+			Contacte nouContacte = new Contacte(nom, email);
+			this.afegirContacte(nouContacte);
+		} else {
+			if (!existeixEmail(email)) {
+				Contacte contacte = this.contactes.get(indexContacte(nom));
+				contacte.addEmail(email);
+			} else {
+				System.out.println("l'email ja existeix");
+			}
+		}
+	}
+	
 	// método que añade un numero a un contacto existente o crea uno nuevo
 	public void afegeixNum(String entrada) throws Exception {
 		int index = -1;
@@ -157,7 +198,7 @@ public class GestorContactes {
 				Contacte contacte = this.contactes.get(indexContacte(nom));
 				contacte.addNumero(numero);
 			} else {
-				System.out.println("el nombre ja existeix");
+				System.out.println("el numero ja existeix");
 			}
 		}
 
@@ -182,6 +223,13 @@ public class GestorContactes {
 
 	}
 
+	//actualitza les dades
+	public void actualitzaFitxer() throws Exception {
+		List<Contacte> contactes = this.getContactes();
+		this.writeTextFile("contactes.lst", contactes, false);
+		ArrayList<String> linies = readTextFile("contactes.lst");
+		mostraLinies(linies);
+	}
 	public static void main(String[] args) throws Exception {
 
 		GestorContactes entorn = new GestorContactes();
@@ -217,8 +265,11 @@ public class GestorContactes {
 			} else if (input.startsWith("AFEGEIX NUM")) {
 				System.out.println("afegint num....");
 				entorn.afegeixNum(input);
+				entorn.actualitzaFitxer();
 			} else if (input.indexOf("AFEGEIX EMAIL") == 0 && input.contains("AFEGEIX EMAIL")) {
 				System.out.println("afegint email....");
+				entorn.afegeixEmail(input);
+				entorn.actualitzaFitxer();
 			} else {
 				System.out.println("No t'entenc");
 			}
