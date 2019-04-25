@@ -100,15 +100,9 @@ public class GestorContactes {
 	}
 
 	// método que lista con contactos contenidos en la lista
-	public String mostraContactes() {
-		List<Contacte> contactes = this.getContactes();
-		String texto = "";
-
-		for (Contacte c : contactes) {
-			texto += "Nom: " + c.getNom() + "\n";
-		}
-
-		return texto;
+	public void llistaContactes() throws Exception {
+		ArrayList<String> linies = readTextFile("contactes.lst");
+		mostraLinies(linies);
 	}
 
 	// to do:
@@ -172,24 +166,27 @@ public class GestorContactes {
 	public static void main(String[] args) throws Exception {
 
 		GestorContactes entorn = new GestorContactes();
+		/*
 		Contacte c1 = new Contacte("Rafael Marín John", 933349231);
-		Contacte c2 = new Contacte("Aina Suàrez Romagossa","aina1998@coldmail.com");
+		Contacte c2 = new Contacte("Aina Suàrez Romagossa",643321243);
 		
 		entorn.afegirContacte(c1);
 		entorn.afegirContacte(c2);
+		c2.addNumero(926345123);
+		c2.addEmail("aina1998@coldmail.com");
 		List<Contacte> contactes = entorn.getContactes();
 		entorn.writeTextFile("contactes.lst", contactes, false);
 		ArrayList<String> linies = readTextFile("contactes.lst");
 		mostraLinies(linies);
+		*/
 		
-		/*
-
+		
 		Scanner entrada = new Scanner(System.in);
 		System.out.println("Gestor de contactes, escriu 'ajuda' per obtenir ajuda");
 
 		while (true) {
 			String input = entrada.nextLine().toUpperCase();
-			if (input.equals("SURT")) {
+			if (input.equals("SORTIR")) {
 				System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
 				String orden = entrada.nextLine().toUpperCase();
 				entorn.processaSortida(orden);
@@ -197,7 +194,7 @@ public class GestorContactes {
 			} else if (input.indexOf("AJUDA") == 0 && input.contains("AJUDA")) {
 				System.out.println(entorn.mostraAjuda());
 			} else if (input.equals("LLISTA")) {
-				System.out.println("listando...");
+				entorn.llistaContactes();
 			} else if (input.startsWith("AFEGEIX NUM")) {
 				System.out.println("afegint....");
 				entorn.afegeixNum(input);
@@ -210,7 +207,7 @@ public class GestorContactes {
 		}
 		System.out.println("has sortit correctament");
 		
-		*/
+		
 
 	}
 
@@ -246,13 +243,13 @@ public class GestorContactes {
 				ArrayList<String> emails = c.getEmail();
 				if (!nums.isEmpty()) {
 					for (Integer i : nums) {
-						linia =  c.getNom() + " NUM " + i.intValue();
+						linia =  c.getNom() + " NUM " + i.intValue()+"\n";
 						bufferedWriter.write(linia);
 					}
 				}
 				if (!emails.isEmpty()) {
 					for (String s : emails) {
-						linia = c.getNom() + " EMAIL: " + s;
+						linia = c.getNom() + " EMAIL " + s+"\n";
 						bufferedWriter.write(linia);
 					}
 				}
@@ -264,7 +261,7 @@ public class GestorContactes {
 	/* Donada una seqüència de línies, les mostra per sortida estàndard */
     private static void mostraLinies(ArrayList<String> linies) {
         for (String linia: linies) {
-            System.out.println("Linia: " + linia);
+            System.out.println(linia);
         }
     }
 

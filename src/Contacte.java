@@ -6,8 +6,8 @@ public class Contacte {
 
 	/* propiedades */
 	private String nom;
-	private ArrayList<Integer> nums;
-	private ArrayList<String> emails;
+	private ArrayList<Integer> nums = new ArrayList<Integer>();
+	private ArrayList<String> emails = new ArrayList<String>();
 
 	/* constructores específicos */
 	
