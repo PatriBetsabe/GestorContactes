@@ -144,6 +144,22 @@ public class GestorContactes {
 	// parametro
 	// método que muestra todos las datos del contacto con este nombre
 	// método que elimina el contacto que tenga el nombre pasado por parametro
+	public void esborrarContacte(String entrada) throws Exception {
+		
+		// verificar que contacto exista
+		String nom = entrada.substring(17);
+		System.out.println(nom);
+		
+		if (this.existeixNom(nom)) {
+			Contacte contacte = this.contactes.get(indexContacte(nom));
+			this.eliminaContacte(contacte);
+			System.out.println("s'ha esborrat el contacte");
+		}else {
+			System.out.println("No es troba el contacte");
+		}
+		
+		// eliminar contacto
+	}
 	// método que elimina el numero del contacto pasado por parámetro
 	// método que elimina el email del contacto pasado por parámetro
 	// método que añade un email a un contacto existente o crea uno nuevo
@@ -270,6 +286,13 @@ public class GestorContactes {
 				System.out.println("afegint email....");
 				entorn.afegeixEmail(input);
 				entorn.actualitzaFitxer();
+			} else if (input.startsWith("ELIMINA CONTACTE")) {
+				System.out.println("esborrant contacte....");
+			} else if (input.startsWith("ELIMINA EMAIL") && input.contains("ELIMINA EMAIL")) {
+				System.out.println("esborrant email....");
+				entorn.esborrarContacte(input);
+			} else if (input.startsWith("ELIMINA NUM") && input.contains("ELIMINA NUM")) {
+				System.out.println("esborrant num....");
 			} else {
 				System.out.println("No t'entenc");
 			}
