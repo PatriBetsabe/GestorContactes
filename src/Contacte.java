@@ -106,4 +106,12 @@ public class Contacte {
 	public ArrayList<String> getEmail() {
 		return emails;
 	}
+	
+	public void addNumero(int num) {
+		this.nums.add(num);
+	}
+	
+	public void addEmail(String email) {
+		this.emails.add(email);
+	}
 }
