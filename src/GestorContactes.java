@@ -1,13 +1,11 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
 	
-	private void Menu() {
-		
-	}
 
 	// añade un nuevo contacto a la lista de contactos
 	public void afegirContacte(Contacte c) throws Exception {
@@ -31,7 +29,7 @@ public class GestorContactes {
 	}
 
 	// mostrar ayuda (todos los comandos con su descripción)
-	public void mostraAjuda() {
+	public String mostraAjuda() {
 		String mensaje = "ajuda: per obtenir ajuda\n"
 				+ "llista:mostra la llista de noms de tots els contactes\n"
 				+ "llista «str»: mostra la llista de tots els contactes que contenen el substring «str»\n"
@@ -48,7 +46,7 @@ public class GestorContactes {
 				+ "troba «num»: troba tots els contactes que comparteixen aquest número de telèfon\n"
 				+ "canvis: mostra els contactes que han estat canviats respecte el que hi ha guardat\n"
 				+ "sortir: surt";
-		System.out.println(mensaje);
+		return mensaje;
 		
 	}
 	
@@ -59,12 +57,11 @@ public class GestorContactes {
 	
 	// método que lista con contactos contenidos en la lista
 	public String mostraContactes() {
-		List<Contacte> contactes = getContactes();
+		List<Contacte> contactes = this.getContactes();
 		String texto = "";
 		
 		for (Contacte c : contactes) {
-			texto += c.getNom() + " EMAIL " + c.getEmail() + "\n";
-			texto += c.getNom() + " NUM " + c.getNums() + "\n";
+			texto += "Nom: " + c.getNom()+ "\n";
 		}
 	
 		return texto;
@@ -83,15 +80,24 @@ public class GestorContactes {
 	public static void main(String[] args) throws Exception {
 
 		GestorContactes entorn = new GestorContactes();
-		//Contacte rafa = new Contacte("Rafael Marín John", "933349231");
-		//Contacte aina = new Contacte("Aina Suárez Romagossa","aina1998@coldmail.com");
+		Contacte patri = new Contacte("Patricia Lamadrid");
+		entorn.afegirContacte(patri);
 		
-		//Contacte patri = new Contacte("Patricia Lamadrid Robles", "697824853");
-
 		
-		// inicio gestor de contactes
+		
+		Scanner entrada = new Scanner(System.in);
 		System.out.println("Gestor de contactes, escriu 'ajuda' per obtenir ajuda");
-		entorn.mostraAjuda();
+		String input = entrada.nextLine().toUpperCase();
+		
+		if(input.indexOf("AJUDA")!= -1) {		
+			System.out.println(entorn.mostraAjuda()); 
+			
+		} else if (input.equals("LLISTA")) {
+			System.out.println(entorn.mostraContactes()); 
+		}
+		
+		
+		
 		
 	}
 
