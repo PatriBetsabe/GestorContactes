@@ -15,7 +15,7 @@ public class GestorContactes {
 	public void afegirContacte(Contacte c) throws Exception {
 		checkContacteNull(c);
 		this.contactes.add(c);
-		System.out.println("contacte afegit!");
+		//System.out.println("contacte afegit!");
 	}
 
 	// elimina el contacto indicado por parametro
@@ -38,6 +38,7 @@ public class GestorContactes {
 		for (Contacte c : contactes) {
 			if (nom.equals(c.getNom())) {
 				resposta = true;
+				break;
 			}
 		}
 		return resposta;
@@ -66,6 +67,7 @@ public class GestorContactes {
 			for (Integer i : nums) {
 				if (num == i.intValue()) {
 					resposta = true;
+					break;
 				}
 			}
 		}
@@ -100,9 +102,24 @@ public class GestorContactes {
 	}
 
 	// método que lista con contactos contenidos en la lista
-	public void llistaContactes() throws Exception {
-		ArrayList<String> linies = readTextFile("contactes.lst");
-		mostraLinies(linies);
+	public String llistaContactes() throws Exception {
+		/*
+		Contacte c1 = new Contacte("Rafael Marín John", 933349231);
+		Contacte c2 = new Contacte("Aina Suàrez Romagossa",643321243);
+		
+		this.afegirContacte(c1);
+		this.afegirContacte(c2);
+		c2.addNumero(926345123);
+		c2.addEmail("aina1998@coldmail.com");*/
+		
+		List<Contacte> contactes = this.getContactes();
+		String texto = "";
+
+		for (Contacte c : contactes) {
+			texto += c.getNom() + "\n";
+		}
+
+		return texto;
 	}
 
 	// to do:
@@ -159,6 +176,8 @@ public class GestorContactes {
 		case "C":
 			System.out.println("Sortida cancel·lada");
 			break;
+		default:
+			System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
 		}
 
 	}
@@ -194,12 +213,12 @@ public class GestorContactes {
 			} else if (input.indexOf("AJUDA") == 0 && input.contains("AJUDA")) {
 				System.out.println(entorn.mostraAjuda());
 			} else if (input.equals("LLISTA")) {
-				entorn.llistaContactes();
+				System.out.println(entorn.llistaContactes());
 			} else if (input.startsWith("AFEGEIX NUM")) {
-				System.out.println("afegint....");
+				System.out.println("afegint num....");
 				entorn.afegeixNum(input);
 			} else if (input.indexOf("AFEGEIX EMAIL") == 0 && input.contains("AFEGEIX EMAIL")) {
-				System.out.println("vols afegir un email!");
+				System.out.println("afegint email....");
 			} else {
 				System.out.println("No t'entenc");
 			}
