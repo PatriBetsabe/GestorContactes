@@ -193,6 +193,14 @@ public class GestorContactes {
 		}
 	}
 	// método que elimina el email del contacto pasado por parámetro
+	public void eliminaEmail(String entrada) throws InvalidParamException {
+		int index = this.indiceNumero(entrada);
+		String nom = entrada.substring(12, index - 1);
+		
+		int posicio = this.contactes.indexOf(new Contacte(nom));
+		System.out.println();
+		
+	}
 	// método que añade un email a un contacto existente o crea uno nuevo
 	// método que cambia a primera posicion el contacto pasado por parametro
 
