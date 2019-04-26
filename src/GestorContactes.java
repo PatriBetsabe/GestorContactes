@@ -156,7 +156,6 @@ public class GestorContactes {
 		} else {
 			System.out.println("No es troba el contacte");
 		}
-
 		// eliminar contacto
 	}
 
