@@ -11,7 +11,9 @@ public class Contacte {
 
 	/* constructores específicos */
 	
+	//
 	// Constructor por defecto
+	//
 	public Contacte() {
 	}
 	

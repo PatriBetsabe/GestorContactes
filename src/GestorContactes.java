@@ -118,6 +118,11 @@ public class GestorContactes {
 		return contactes;
 	}
 
+	// método que lista los contactos por por el nombre
+	public String llistaContactesPerNom() {
+		return null;	
+	}
+	
 	// método que lista con contactos contenidos en la lista
 	public String llistaContactes() throws Exception {
 		/*
@@ -200,9 +205,22 @@ public class GestorContactes {
 		System.out.println();
 		
 	}
-	// método que añade un email a un contacto existente o crea uno nuevo
-	// método que cambia a primera posicion el contacto pasado por parametro
 
+	// método que devuelve el nombre de la entrada
+	// método que recibe el nombre y devuelve la posicion del contacto
+	
+	// método que cambia a primera posicion el contacto pasado por parametro
+	public void pujaContacte(String nom) {
+		// guarda la posicion
+		// Contacte tmp = contactes.set(index, element);
+		// cambia la posicion por el anterior
+		// contactes.set(index, element);
+		// cambia la posicion 
+		
+		// mirar metodo insert
+	}
+	
+	
 	// método que añade un email a un contacto existente o crea uno nuevo
 	public void afegeixEmail(String entrada) throws Exception {
 		// encontrar posicion email
