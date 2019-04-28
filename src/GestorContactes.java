@@ -119,12 +119,12 @@ public class GestorContactes {
 	}
 
 	// método que lista los contactos por por el nombre
-	public String llistaContactesPerNom() {
+	public String llistaContactes() {
 		return null;	
 	}
 	
 	// método que lista con contactos contenidos en la lista
-	public String llistaContactes() throws Exception {
+	public String llistaNomContactes() throws Exception {
 		/*
 		 * Contacte c1 = new Contacte("Rafael Marín John", 933349231); Contacte c2 = new
 		 * Contacte("Aina Suàrez Romagossa",643321243);
@@ -134,13 +134,18 @@ public class GestorContactes {
 		 */
 
 		List<Contacte> contactes = this.getContactes();
-		String texto = "";
+		if (contactes.isEmpty()) {
+			return "De moment no hi ha contactes afegits";
+		}else {
+			String texto = "";
 
-		for (Contacte c : contactes) {
-			texto += c.getNom() + "\n";
+			for (Contacte c : contactes) {
+				texto += c.getNom() + "\n";
+			}
+
+			return texto;
 		}
-
-		return texto;
+		
 	}
 
 	// to do:
@@ -329,7 +334,7 @@ public class GestorContactes {
 			} else if (input.indexOf("AJUDA") == 0 && input.contains("AJUDA")) {
 				System.out.println(entorn.mostraAjuda());
 			} else if (input.equals("LLISTA")) {
-				System.out.println(entorn.llistaContactes());
+				System.out.println(entorn.llistaNomContactes());
 			} else if (input.startsWith("AFEGEIX NUM")) {
 				System.out.println("afegint num....");
 				entorn.afegeixNum(input);
