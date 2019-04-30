@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
-	private String path = "contactes.lst";
 
 	// añade un nuevo contacto a la lista de contactos
 	public void afegirContacte(Contacte c) throws Exception {
@@ -302,13 +301,7 @@ public class GestorContactes {
 
 	}
 
-	// actualitza les dades
-	public void actualitzaFitxer() throws Exception {
-		List<Contacte> contactes = this.getContactes();
-		this.writeTextFile("contactes.lst", contactes, false);
-		ArrayList<String> linies = readTextFile("contactes.lst");
-		mostraLinies(linies);
-	}
+	
 
 	public static void main(String[] args) throws Exception {
 
@@ -343,11 +336,10 @@ public class GestorContactes {
 			} else if (input.startsWith("AFEGEIX NUM")) {
 				System.out.println("afegint num....");
 				entorn.afegeixNum(input);
-				entorn.actualitzaFitxer();
 			} else if (input.indexOf("AFEGEIX EMAIL") == 0 && input.contains("AFEGEIX EMAIL")) {
 				System.out.println("afegint email....");
 				entorn.afegeixEmail(input);
-				entorn.actualitzaFitxer();
+				// entorn.actualitzaFitxer();
 			} else if (input.startsWith("ELIMINA CONTACTE")) {
 				System.out.println("esborrant contacte....");
 				entorn.esborrarContacte(input);
@@ -365,59 +357,6 @@ public class GestorContactes {
 
 	}
 
-	/*
-	 * Donat el camí a un fitxer, llegeix els seus continguts i els retorna en forma
-	 * d'ArrayList
-	 */
-	private static ArrayList<String> readTextFile(String path) throws Exception {
-		ArrayList<String> linies = new ArrayList<String>();
-		FileReader fileReader = new FileReader(path);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String linia = "";
-		while (linia != null) {
-			linia = bufferedReader.readLine();
-			if (linia != null) {
-				linies.add(linia);
-			}
-		}
-		bufferedReader.close();
-		return linies;
-	}
-
-	// Escriu les dades dels contactes al fitxer 'contactes.lst'
-	private void writeTextFile(String path, List<Contacte> contactes, boolean amplia) throws Exception {
-		FileWriter fileWriter = new FileWriter(path, amplia);
-		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-		String linia = "";
-		if (contactes.isEmpty()) {
-			System.out.println("no hi ha cap contacte");
-		} else {
-			for (Contacte c : contactes) {
-				ArrayList<String> nums = c.getNums();
-				ArrayList<String> emails = c.getEmail();
-				if (!nums.isEmpty()) {
-					for (String i : nums) {
-						linia = c.getNom() + " NUM " + i + "\n";
-						bufferedWriter.write(linia);
-					}
-				}
-				if (!emails.isEmpty()) {
-					for (String s : emails) {
-						linia = c.getNom() + " EMAIL " + s + "\n";
-						bufferedWriter.write(linia);
-					}
-				}
-			}
-			bufferedWriter.close();
-		}
-	}
-
-	/* Donada una seqüència de línies, les mostra per sortida estàndard */
-	private static void mostraLinies(ArrayList<String> linies) {
-		for (String linia : linies) {
-			System.out.println(linia);
-		}
-	}
+	
 
 }
