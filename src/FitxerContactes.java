@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FitxerContactes {
+	private String path = "contactes.lst";
+	
 	// leer fichero "contactes.lst"
 	
 	// buscar contactos
