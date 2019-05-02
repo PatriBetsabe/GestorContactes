@@ -372,19 +372,80 @@ public class GestorContactes {
 		}
 
 	}
-
-	public void pujaContacte(String nom) {
-
-		// guarda la posicion
-		// Contacte tmp = contactes.set(index, element);
-		// cambia la posicion por el anterior
-		// contactes.set(index, element);
-		// cambia la posicion
+	// puja el contacte una posició en l’ordre.
+	public void pujaContacte(String entrada) {
+		String regex = "^(puja) (.+)$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(entrada);
+		if (matcher.matches()) {
+			String nom = matcher.group(2).trim();
+			if (esNomExistent(nom)) {
+				List<Contacte> contactes = getContactes();
+				Contacte c = obtenirContacteExistent(nom);
+				int posicio = contactes.indexOf(c);
+				System.out.println("las posicio del contacte es: " + posicio);
+				if (posicio != 0) {
+					Contacte tmp = contactes.get(posicio -1);
+					System.out.println(posicio);
+					//puja el contacte
+					contactes.set(posicio - 1, c);
+					contactes.set(posicio, tmp);
+					System.out.println("fet, la nova posicio de " +c.getNom() +" es: " + contactes.indexOf(c));
+				}
+			} else {
+				System.out.println("no es troba el contacte");
+			}
+		}
 		// mirar metodo insert
 	}
 
+	//puja el contacte com a primer element del llistat.
+	public void flotaContacte(String entrada) {
+		String regex = "^(flota) (.+)$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(entrada);
+		if (matcher.matches()) {
+			String nom = matcher.group(2).trim();
+			if (esNomExistent(nom)) {
+				List<Contacte> contactes = getContactes();
+				Contacte c = obtenirContacteExistent(nom);
+				int posicio = contactes.indexOf(c);
+				if (posicio != 0) {
+					contactes.add(0, c);
+					contactes.remove(posicio + 1);
+					System.out.println("fet");
+				}
+			} else {
+				System.out.println("no es troba el contacte");
+			}
+		}
+	}
+	
+	//baixa el contacte una posició en l’ordre
+		public void baixaContacte(String entrada) {
+			String regex = "^(baixa) (.+)$";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(entrada);
+			if (matcher.matches()) {
+				String nom = matcher.group(2).trim();
+				if (esNomExistent(nom)) {
+					List<Contacte> contactes = getContactes();
+					Contacte c = obtenirContacteExistent(nom);
+					int posicio = contactes.indexOf(c);
+					if (posicio != contactes.size()-1) {
+						Contacte tmp = contactes.get(posicio + 1);
+						contactes.set(posicio + 1, c);
+						contactes.set(posicio, tmp);
+						System.out.println("fet");
+					}
+				} else {
+					System.out.println("no es troba el contacte");
+				}
+			}
+		}
+	
 	// método que añade un email a un contacto existente o crea uno nuevo public
-	void afegeixEmail(String entrada) throws Exception {
+	public void afegeixEmail(String entrada) throws Exception {
 		String regex = "^(afegeix email) (.+) (.+@.+) *";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(entrada);
@@ -500,6 +561,18 @@ public class GestorContactes {
 				entorn.eliminaEmail(input);
 			} else if (input.startsWith("elimina num")) {
 				entorn.eliminaTelefon(input);
+			} else if (input.startsWith("puja")) {
+				entorn.pujaContacte(input);
+			} else if (input.startsWith("flota")) {
+				entorn.flotaContacte(input);
+			} else if (input.startsWith("baixa")) {
+				entorn.baixaContacte(input);
+			} else if (input.startsWith("esfonsa")) {
+				//entorn.esfonsaContacte(input);
+			} else if (input.startsWith("troba")) {
+				//entorn.trobaNum(input);
+			} else if (input.equals("canvis")) {
+				//entorn.canvis();
 			} else {
 				System.out.println("No t'entenc");
 			}

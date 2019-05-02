@@ -51,3 +51,26 @@ elimina email Aina Suàrez Romagossa aina1998@coldmail.com
 aquest contacte té un sol correu electrònic, segur que vols eliminar aina1998@coldmail.comEscriu SI / NO
 si
 correu eliminat
+
+
+puja Aina Suàrez Romagossa
+las posicio del contacte es: 1
+1
+fet, la nova posicio de Aina Suàrez Romagossa es: 0
+llista
+Aina Suàrez Romagossa
+Rafael Marín John
+
+puja Rafael Marín John
+las posicio del contacte es: 1
+1
+fet, la nova posicio de Rafael Marín John es: 0
+llista
+Rafael Marín John
+Aina Suàrez Romagossa
+
+puja Rafael Marín John
+las posicio del contacte es: 0
+llista
+Rafael Marín John
+Aina Suàrez Romagossa
