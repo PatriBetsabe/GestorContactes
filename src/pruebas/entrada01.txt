@@ -74,3 +74,23 @@ las posicio del contacte es: 0
 llista
 Rafael Marín John
 Aina Suàrez Romagossa
+
+
+afegeix num Patricia Lamadrid +34697824853
+contacte afegit! Patricia Lamadrid
+número afegit
+esfonsa Rafael Marín John
+fet
+llista
+Aina Suàrez Romagossa
+Patricia Lamadrid
+Rafael Marín John
+
+esfonsa Aina Suàrez Romagossa
+fet
+
+No t'entenc
+llista
+Patricia Lamadrid
+Rafael Marín John
+Aina Suàrez Romagossa
