@@ -7,6 +7,7 @@ public class Contacte {
 	private String nom;
 	private ArrayList<String> nums = new ArrayList<String>();
 	private ArrayList<String> emails = new ArrayList<String>();
+	private Canvi canvi = Canvi.SINCAMBIOS;
 
 	// Constructor por defecto
 	public Contacte() {
@@ -54,6 +55,14 @@ public class Contacte {
 		if (nom == null || nom.equals(""))
 			throw new InvalidParamException();
 		this.nom = nom;
+	}
+	
+	public Canvi getCanvi() {
+		return canvi;
+	}
+	
+	public void setCanvi(Canvi canvi) {
+		this.canvi = canvi;
 	}
 	
 	/* retorna true si el contacto tiene numero(s) de telefono*/

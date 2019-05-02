@@ -485,6 +485,11 @@ public class GestorContactes {
 			}
 		}
 	}
+	
+	// mostra els contactes que han estat canviats respecte el que hi ha guardat.
+	public void mostraCanvis() {
+		
+	}
 
 	// método que añade un email a un contacto existente o crea uno nuevo public
 	public void afegeixEmail(String entrada) throws Exception {
@@ -614,7 +619,7 @@ public class GestorContactes {
 			} else if (input.startsWith("troba")) {
 				entorn.trobaNum(input);
 			} else if (input.equals("canvis")) {
-				// entorn.canvis();
+				entorn.mostraCanvis();
 			} else {
 				System.out.println("No t'entenc");
 			}

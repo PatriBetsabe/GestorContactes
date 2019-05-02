@@ -1,0 +1,4 @@
+
+public enum Canvi {
+	MODIFICAT, AFEGIT, ELIMINAT, SINCAMBIOS
+}
