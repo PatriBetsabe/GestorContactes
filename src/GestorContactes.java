@@ -280,52 +280,74 @@ public class GestorContactes {
 
 	}
 
-	// retorna el indice del primer digito que encuentra en la cadena de texto
-	private int indiceNumero(String entrada) {
-		// verifica que telefono exista
-		int index = -1;
-		// encontrar posicion numero
-		for (int i = 0; i < entrada.length(); i++) {
-			char act = entrada.charAt(i);
-			if (Character.isDigit(act)) {
-				index = i;
-				break;
+	
+	// método que elimina el telefono del contacto pasado por parámetro
+		public void eliminaTelefon(String entrada) throws InvalidParamException {
+			Scanner input = new Scanner(System.in);
+			String regex = "^(elimina num) (.+) (.+@.+) *";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(entrada);
+			if (matcher.matches()) {
+				String nom = matcher.group(2).trim();
+				String email = matcher.group(3).trim();
+				boolean troba = false;
+				if (esNomExistent(nom)) {
+					Contacte c = obtenirContacteExistent(nom);
+					for (String e : c.getEmails()) {
+						if (e.equals(email)) {
+							troba = true;
+							if (c.getEmails().size() == 1) {
+								System.out.println("aquest contacte té un sol correu electrònic, segur que vols eliminar " + e + "Escriu SI / NO");
+								String rpta = input.next();
+								switch (rpta.toUpperCase()) {
+								case "SI":
+									c.removeEmail(email);
+									System.out.println("correu eliminat");
+									break;
+								case "NO":
+									System.out.println("Has cancel·lat l'eliminació");
+									break;
+								default:
+									System.out.println("No t'entenc");
+								}
+							} else {
+								c.removeEmail(email);
+							}
+						}
+					}
+					if (!troba) {
+						System.out.println("telefon no disponible");
+					}
+				} else {
+					System.out.println("no es troba el contacte");
+				}
+			} else {
+				System.out.println("el format de telefon és incorrecte");
 			}
+
 		}
-		return index;
-	}
-	/*
-	 * // método que elimina el numero del contacto pasado por parámetro public void
-	 * eliminaNum(String entrada) { int index = this.indiceNumero(entrada); String
-	 * nom = entrada.substring(12, index - 1); String numero =
-	 * entrada.substring(index);
-	 * 
-	 * if (esNomExistent(nom)) { if (esNumeroExistent(c,numero)) { Contacte contacte
-	 * = this.contactes.get(indexContacte(nom)); contacte.removeNumero(numero); }
-	 * else { System.out.println("telefon no disponible"); } } else {
-	 * System.out.println("no es troba el contacte"); } }
-	 */
 
 	// método que elimina el email del contacto pasado por parámetro
 	public void eliminaEmail(String entrada) throws InvalidParamException {
 		Scanner input = new Scanner(System.in);
-		String regex = "^(elimina email) (.+) (.+@.+) *";
+		String regex = "^(elimina num) (.+) (.+\\d+) *";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(entrada);
 		if (matcher.matches()) {
 			String nom = matcher.group(2).trim();
-			String email = matcher.group(3).trim();
-
+			String numero = matcher.group(3).trim();
+			boolean troba = false;
 			if (esNomExistent(nom)) {
 				Contacte c = obtenirContacteExistent(nom);
-				for (String e : c.getEmails()) {
-					if (e.equals(email)) {
-						if (c.getEmails().size() == 1) {
-							System.out.println("aquest contacte té un sol correu electrònic, segur que vols eliminar " + e + "Escriu SI / NO");
+				for (String n : c.getNums()) {
+					if (n.equals(numero)) {
+						troba = true;
+						if (c.getNums().size() == 1) {
+							System.out.println("aquest contacte té un sol correu electrònic, segur que vols eliminar " + n + "? Escriu SI / NO");
 							String rpta = input.next();
 							switch (rpta.toUpperCase()) {
 							case "SI":
-								c.removeEmail(email);
+								c.removeNumero(numero);
 								System.out.println("correu eliminat");
 								break;
 							case "NO":
@@ -335,9 +357,12 @@ public class GestorContactes {
 								System.out.println("No t'entenc");
 							}
 						} else {
-							c.removeEmail(email);
+							c.removeNumero(numero);
 						}
 					}
+				}
+				if (!troba) {
+					System.out.println("correu no disponible");
 				}
 			} else {
 				System.out.println("no es troba el contacte");
@@ -348,10 +373,6 @@ public class GestorContactes {
 
 	}
 
-	// método que devuelve el nombre de la entrada
-	// método que recibe el nombre y devuelve la posicion del contacto
-
-	// método que cambia a primera posicion el contacto pasado por parametro
 	public void pujaContacte(String nom) {
 
 		// guarda la posicion
@@ -476,9 +497,9 @@ public class GestorContactes {
 			} else if (input.startsWith("elimina contacte")) {
 				entorn.esborrarContacte(input);
 			} else if (input.startsWith("elimina email")) {
-				entorn.esborrarContacte(input);
+				entorn.eliminaEmail(input);
 			} else if (input.startsWith("elimina num")) {
-				// entorn.eliminaNum(input);
+				entorn.eliminaTelefon(input);
 			} else {
 				System.out.println("No t'entenc");
 			}

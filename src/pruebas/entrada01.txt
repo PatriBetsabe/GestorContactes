@@ -29,3 +29,25 @@ se espera(Contacte esborrat!)
 
 elimina contacte Aina lalala
 se espera(no es troba el contacte)
+
+
+elimina email Aina Suàrez Romagossa patty
+el format del email és incorrecte
+elimina email Aina Suàrez Romagossa aina@lala.com
+correu no disponible
+elimina email Aina Suàrez Romagos aina.com
+el format del email és incorrecte
+elimina email Aina Suàrez Romssa patty@ceec
+no es troba el contacte
+elimina email Aina Suàrez Romagossa aina1998@coldmail.com
+aquest contacte té un sol correu electrònic, segur que vols eliminar aina1998@coldmail.comEscriu SI / NO
+no
+Has cancel·lat l'eliminació
+elimina email Aina Suàrez Romagossa aina1998@coldmail.com
+aquest contacte té un sol correu electrònic, segur que vols eliminar aina1998@coldmail.comEscriu SI / NO
+lala
+No t'entenc
+elimina email Aina Suàrez Romagossa aina1998@coldmail.com
+aquest contacte té un sol correu electrònic, segur que vols eliminar aina1998@coldmail.comEscriu SI / NO
+si
+correu eliminat
