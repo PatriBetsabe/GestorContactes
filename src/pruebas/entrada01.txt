@@ -1,1 +1,31 @@
+ajuda
 llista
+llista aina
+mostra Rafael Marín John
+mostra Aina Suàrez Romagossa
+afegeix num Aina Suàrez Romagossa 926345123
+se espera(aquest contacte ja té aquest número)
+
+afegeix num Aina Suàrez Romagossa 926345321
+se espera (número afegit)
+
+afegeix email Patricia Lamadrid patty.com
+se espera(el format del email és incorrecte)
+
+afegeix email Patricia Lamadrid patty@dev.com
+se espera(contacte afegit! Patricia Lamadrid
+número afegit)
+
+afegeix email Patricia Lamadrid patty@dev.com
+
+afegeix num Patricia Lamadrid unodostres
+se espera(el format del nombre és incorrecte)
+
+afegeix num Patricia Lamadrid +34697824853
+se espera(número afegit)
+
+elimina contacte Aina Suàrez Romagossa
+se espera(Contacte esborrat!)
+
+elimina contacte Aina lalala
+se espera(no es troba el contacte)
