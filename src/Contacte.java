@@ -1,5 +1,4 @@
 
-import java.awt.List;
 import java.util.ArrayList;
 
 public class Contacte {
@@ -9,11 +8,7 @@ public class Contacte {
 	private ArrayList<String> nums = new ArrayList<String>();
 	private ArrayList<String> emails = new ArrayList<String>();
 
-	/* constructores específicos */
-	
-	//
 	// Constructor por defecto
-	//
 	public Contacte() {
 	}
 	
@@ -37,23 +32,7 @@ public class Contacte {
 			this.emails = emails;
 		}
 	}
-
-
-	/* Constructor con el nombre y mail dirección de correo contacto */
-	public Contacte(String nom, String email) throws InvalidParamException {
-		if (!email.contains("@")) {
-			throw new InvalidParamException("Formato de email no válido");
-		} else if (!email.equals("")) {
-			this.emails.add(email);
-		}
-
-		if (nom.equals("") || nom == null)
-			throw new InvalidParamException("Introduce un nombre");
-		else {
-			this.nom = nom;
-		}
-
-	}
+	
 	
 	/* Constructor con solo el nombre del contacto */
 	public Contacte(String nom) throws InvalidParamException {
@@ -91,7 +70,7 @@ public class Contacte {
 		return nums;
 	}
 
-	public ArrayList<String> getEmail() {
+	public ArrayList<String> getEmails() {
 		return emails;
 	}
 	
@@ -109,5 +88,22 @@ public class Contacte {
 	
 	public void removeEmail(String email) {
 		this.emails.remove(email);
+	}
+	
+	@Override
+	public String toString() {
+		String texto = "Nom: " + this.getNom() + "\n";
+		if (!nums.isEmpty()) {
+			for (String n : getNums()) {
+				texto += "Numero: " + n +"\n";
+			}
+		}
+		
+		if (!emails.isEmpty()) {
+			for (String e : getEmails()) {
+				texto += "Email: " + e + "\n";
+			}
+		}
+		return texto;
 	}
 }
