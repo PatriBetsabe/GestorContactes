@@ -1,6 +1,5 @@
 
 import java.io.BufferedReader;
-
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -213,17 +212,14 @@ public class GestorContactes {
 	}
 
 	// método que lista el nombre de los contactos contenidos en la lista
-	public String llistaNomContactes() throws Exception {
+	public void llistaNomContactes() throws Exception {
 		List<Contacte> contactes = this.getContactes();
 		if (contactes.isEmpty()) {
-			return "De moment no hi ha contactes";
+			System.out.println("De moment no hi ha contactes");
 		} else {
-			String texto = "";
-
 			for (Contacte c : contactes) {
-				texto += c.getNom() + "\n";
+				System.out.println(c.getNom());
 			}
-			return texto;
 		}
 	}
 
@@ -257,7 +253,7 @@ public class GestorContactes {
 			String nom = matcher.group(2).trim();
 			if (esNomExistent(nom)) {
 				Contacte c = obtenirContacteExistent(nom);
-				System.out.println("Segur que vols eliminar aquest contacte?\n" + c.toString() + "Escriu: SI / NO");
+				System.out.println("Segur que vols eliminar aquest contacte? SI /NO\n" + c.toString());
 				String rpta = input.next();
 				switch (rpta.toUpperCase()) {
 				case "SI":
@@ -279,9 +275,9 @@ public class GestorContactes {
 	}
 
 	// método que elimina el telefono del contacto pasado por parámetro
-	public void eliminaTelefon(String entrada) throws InvalidParamException {
+	public void eliminaEmail(String entrada) throws InvalidParamException {
 		Scanner input = new Scanner(System.in);
-		String regex = "^(elimina num) (.+) (.+@.+) *";
+		String regex = "^(elimina email) (.+) (.+@.+) *";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(entrada);
 		if (matcher.matches()) {
@@ -294,8 +290,7 @@ public class GestorContactes {
 					if (e.equals(email)) {
 						troba = true;
 						if (c.getEmails().size() == 1) {
-							System.out.println("aquest contacte té un sol correu electrònic, segur que vols eliminar "
-									+ e + "Escriu SI / NO");
+							System.out.println("aquest contacte té un sol correu electrònic, segur que ho vols eliminar? SI / NO\n" + e );
 							String rpta = input.next();
 							switch (rpta.toUpperCase()) {
 							case "SI":
@@ -314,19 +309,19 @@ public class GestorContactes {
 					}
 				}
 				if (!troba) {
-					System.out.println("telefon no disponible");
+					System.out.println("correu no disponible");
 				}
 			} else {
 				System.out.println("no es troba el contacte");
 			}
 		} else {
-			System.out.println("el format de telefon és incorrecte");
+			System.out.println("format de correu incorrecte");
 		}
 
 	}
 
 	// método que elimina el email del contacto pasado por parámetro
-	public void eliminaEmail(String entrada) throws InvalidParamException {
+	public void eliminaTelefon(String entrada) throws InvalidParamException {
 		Scanner input = new Scanner(System.in);
 		String regex = "^(elimina num) (.+) (.+\\d+) *";
 		Pattern pattern = Pattern.compile(regex);
@@ -341,13 +336,12 @@ public class GestorContactes {
 					if (n.equals(numero)) {
 						troba = true;
 						if (c.getNums().size() == 1) {
-							System.out.println("aquest contacte té un sol correu electrònic, segur que vols eliminar "
-									+ n + "? Escriu SI / NO");
+							System.out.println("aquest contacte té només un telèfon, segur que ho vols eliminar? SI/NO\n"+ n);
 							String rpta = input.next();
 							switch (rpta.toUpperCase()) {
 							case "SI":
 								c.removeNumero(numero);
-								System.out.println("correu eliminat");
+								System.out.println("telèfon eliminat");
 								break;
 							case "NO":
 								System.out.println("Has cancel·lat l'eliminació");
@@ -361,13 +355,13 @@ public class GestorContactes {
 					}
 				}
 				if (!troba) {
-					System.out.println("correu no disponible");
+					System.out.println("telèfon no disponible");
 				}
 			} else {
 				System.out.println("no es troba el contacte");
 			}
 		} else {
-			System.out.println("el format del email és incorrecte");
+			System.out.println("format de telèfon incorrecte");
 		}
 
 	}
@@ -535,7 +529,6 @@ public class GestorContactes {
 
 	// método que gestiona los cambios hechos en la lista
 	public void processaSortida(String entrada) {
-		System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
 		switch (entrada) {
 		case "G":
 			System.out.println("Canvis guardats");
@@ -547,7 +540,7 @@ public class GestorContactes {
 			System.out.println("Sortida cancel·lada");
 			break;
 		default:
-			System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
+			System.out.println("no t'entenc ");
 		}
 
 	}
@@ -584,16 +577,18 @@ public class GestorContactes {
 		System.out.println("Gestor de contactes, escriu 'ajuda' per obtenir ajuda");
 
 		while (true) {
+			System.out.print(">> ");
 			String input = entrada.nextLine();
-			if (input.equals("SORTIR")) {
+			if (input.equals("sortir")) {
 				System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
+				System.out.print(">> ");
 				String orden = entrada.nextLine();
 				entorn.processaSortida(orden);
 				break;
 			} else if (input.equals("ajuda")) {
 				System.out.println(entorn.mostraAjuda());
 			} else if (input.equals("llista")) {
-				System.out.println(entorn.llistaNomContactes());
+				entorn.llistaNomContactes();
 			} else if (input.startsWith("llista")) {
 				System.out.println(entorn.llistaContactesPerString(input));
 			} else if (input.startsWith("mostra")) {
