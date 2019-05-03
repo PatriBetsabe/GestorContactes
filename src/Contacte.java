@@ -7,7 +7,7 @@ public class Contacte {
 	private String nom;
 	private ArrayList<String> nums = new ArrayList<String>();
 	private ArrayList<String> emails = new ArrayList<String>();
-	private Canvi canvi = Canvi.SINCAMBIOS;
+	private Canvi canvi = Canvi.SENSECANVIS;
 
 	// Constructor por defecto
 	public Contacte() {

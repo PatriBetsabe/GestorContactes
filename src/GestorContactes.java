@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
+	private List<Contacte> contactesFitxer;
 
 	public void extraeDados(String text) throws Exception {
 		String regex = "^(.+) (NUM|EMAIL) (.+)$";
@@ -36,6 +37,12 @@ public class GestorContactes {
 			}
 			afegirDadesAcontacte(c, email, numero);
 		}
+	}
+	
+	public List<Contacte> obtenirContactesFitxer(String numero) throws Exception{
+		List<Contacte> llistaContactes = new ArrayList<>();
+		ArrayList<String> linies = readTextFile("contactes.lst");
+		return llistaContactes;
 	}
 
 	// retorna el contacto buscando por el nombre
@@ -482,7 +489,7 @@ public class GestorContactes {
 	
 	// mostra els contactes que han estat canviats respecte el que hi ha guardat.
 	public void mostraCanvis() {
-		
+		// mostrar los cambios de los contactos (añadidos, modificados, borrados)
 	}
 
 	// método que añade un email a un contacto existente o crea uno nuevo public
@@ -572,7 +579,7 @@ public class GestorContactes {
 		for (String l : linies) {
 			entorn.extraeDados(l);
 		}
-
+		
 		Scanner entrada = new Scanner(System.in);
 		System.out.println("Gestor de contactes, escriu 'ajuda' per obtenir ajuda");
 
