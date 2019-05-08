@@ -496,6 +496,7 @@ public class GestorContactes {
 		// mostrar los cambios de los contactos (añadidos, modificados, borrados)
 		for (Contacte c : getContactes()) {
 			System.out.println(c.toString());
+			// cambios respecto del fichero
 		}
 	}
 
