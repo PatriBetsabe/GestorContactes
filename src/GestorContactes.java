@@ -36,8 +36,11 @@ public class GestorContactes {
 				c = obtenirContacteExistent(nombre);
 			}
 			afegirDadesAcontacte(c, email, numero);
+			c.setCanvi(Canvi.SENSECANVIS);
 		}
 	}
+	
+	
 	
 	public List<Contacte> obtenirContactesFitxer(String numero) throws Exception{
 		List<Contacte> llistaContactes = new ArrayList<>();
@@ -54,6 +57,7 @@ public class GestorContactes {
 	public void afegirDadesAcontacte(Contacte c, String email, String numero) {
 		afegirEmailAContacte(c, email);
 		afegirNumeroAcontacte(c, numero);
+		
 	}
 
 	public void afegirNumeroAcontacte(Contacte c, String numero) {
@@ -490,6 +494,9 @@ public class GestorContactes {
 	// mostra els contactes que han estat canviats respecte el que hi ha guardat.
 	public void mostraCanvis() {
 		// mostrar los cambios de los contactos (añadidos, modificados, borrados)
+		for (Contacte c : getContactes()) {
+			System.out.println(c.toString());
+		}
 	}
 
 	// método que añade un email a un contacto existente o crea uno nuevo public

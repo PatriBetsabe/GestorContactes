@@ -113,6 +113,8 @@ public class Contacte {
 				texto += "Email: " + e + "\n";
 			}
 		}
+		
+		texto += this.getCanvi().name();
 		return texto;
 	}
 }
