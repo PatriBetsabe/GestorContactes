@@ -13,28 +13,7 @@ public class Contacte {
 	public Contacte() {
 	}
 	
-	/*Constructor con los datos enteros */
-	public Contacte(String nom, ArrayList<String> nums, ArrayList<String> emails) throws InvalidParamException {
-		if (nom.equals("") || nom == null)
-			throw new InvalidParamException("Parametros inválidos");
-		else {
-			this.nom = nom;
-		}
-		
-		if (nums.isEmpty()) {
-			this.nums = new ArrayList<String>();
-		} else {
-			this.nums = nums;
-		}
-		
-		if (emails.isEmpty()) {
-			this.emails = new ArrayList<String>();
-		} else {
-			this.emails = emails;
-		}
-	}
-	
-	
+
 	/* Constructor con solo el nombre del contacto */
 	public Contacte(String nom) throws InvalidParamException {
 		if (nom.equals("") || nom == null)
@@ -44,8 +23,7 @@ public class Contacte {
 		}
 	}
 
-	// métodos
-	
+	// métodos	
 	/* getters & setters */
 	public String getNom() {
 		return nom;
@@ -63,16 +41,6 @@ public class Contacte {
 	
 	public void setCanvi(Canvi canvi) {
 		this.canvi = canvi;
-	}
-	
-	/* retorna true si el contacto tiene numero(s) de telefono*/
-	public boolean contacteTeNumero() {
-		return this.nums.isEmpty();
-	}
-	
-	/* retorna true si el contacte tienes email(s) */
-	public boolean contacteTeCorreo() {
-		return this.emails.isEmpty();
 	}
 
 	public ArrayList<String> getNums() {

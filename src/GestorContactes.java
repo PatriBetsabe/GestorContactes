@@ -206,7 +206,7 @@ public class GestorContactes {
 		}
 
 		if (respuesta.equals("")) {
-			respuesta = "no hi ha cap contacte que contingui ' " + str + " '";
+			respuesta = "no hi ha cap contacte que contingui '" + str + "'";
 		}
 		return respuesta;
 	}
