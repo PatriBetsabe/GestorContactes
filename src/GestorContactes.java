@@ -64,7 +64,6 @@ public class GestorContactes {
 		if (!numero.equals("")) {
 			if (!esNumeroExistent(c, numero)) {
 				c.addNumero(numero);
-				System.out.println("número afegit");
 			} else {
 				System.out.println("aquest contacte ja té aquest número");
 			}
@@ -75,7 +74,6 @@ public class GestorContactes {
 		if (!email.equals("")) {
 			if (!esEmailExistent(c, email)) {
 				c.addEmail(email);
-				System.out.println("email afegit");
 			} else {
 				System.out.println("aquest contacte ja té aquest email");
 			}
@@ -86,7 +84,6 @@ public class GestorContactes {
 	public void afegirContacte(Contacte c) throws Exception {
 		checkContacteNull(c);
 		this.contactes.add(c);
-		System.out.println("contacte afegit! " + c.getNom());
 	}
 
 	// elimina el contacto indicado por parametro
@@ -164,9 +161,10 @@ public class GestorContactes {
 
 	// mostrar ayuda (todos los comandos con su descripción)
 	public String mostraAjuda() {
-		String mensaje = "ajuda: per obtenir ajuda\n" + "llista:mostra la llista de noms de tots els contactes\n"
-				+ "llista «str»: mostra la llista de tots els contactes que contenen el substring «str»\n"
-				+ "mostra «nom»: mostra totes les dades del contacte amb aquest nom\n"
+		String mensaje = "ajuda: mostra comandes\n"
+				+ "llista: mostra els noms dels contactes\n"
+				+ "llista «str»: llista els contactes que contenen «str»\n"
+				+ "mostra «nom»: mostra les dades del contacte amb aquest nom\n"
 				+ "elimina contacte «nom»: elimina el contacte amb aquest nom\n"
 				+ "elimina num «nom» «num»: elimina el telèfon del contacte\n"
 				+ "elimina email «nom» «email»:elimina  l’adreça de correu\n"
@@ -189,16 +187,8 @@ public class GestorContactes {
 	}
 
 	// método que lista los contactos que contienen el substring
-	public String llistaContactesPerString(String entrada) {
-		String regex = "^(llista) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
+	public String llistaContactesPerString(String str) {
 		String respuesta = "";
-		String str = "";
-		if (matcher.matches()) {
-			str = matcher.group(2).trim();
-		}
-
 		for (Contacte c : getContactes()) {
 			if (c.getNom().indexOf(str) != -1) {
 				respuesta += c.toString();
@@ -218,7 +208,6 @@ public class GestorContactes {
 		if (respuesta.equals("")) {
 			respuesta = "no hi ha cap contacte que contingui ' " + str + " '";
 		}
-
 		return respuesta;
 	}
 
@@ -235,259 +224,185 @@ public class GestorContactes {
 	}
 
 	// metodo que muestra todos los datos del contacto
-	public String mostraNom(String entrada) {
-		String regex = "^(mostra) (.+)$";
+	public String mostraNom(String nom) {
 		String respuesta = "no es troba el contacte";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-
-			if (esNomExistent(nom)) {
-				Contacte c = obtenirContacteExistent(nom);
-				respuesta = c.toString();
-			}
+		if (esNomExistent(nom)) {
+			Contacte c = obtenirContacteExistent(nom);
+			respuesta = c.toString();
 		}
-
 		return respuesta;
-
 	}
 
 	// elimina el contacto
-	public void esborrarContacte(String entrada) throws Exception {
+	public void esborrarContacte(String nom) throws Exception {
 		Scanner input = new Scanner(System.in);
-		String regex = "^(elimina contacte) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			if (esNomExistent(nom)) {
-				Contacte c = obtenirContacteExistent(nom);
-				System.out.println("Segur que vols eliminar aquest contacte? SI /NO\n" + c.toString());
-				String rpta = input.next();
-				switch (rpta.toUpperCase()) {
-				case "SI":
-					eliminaContacte(c);
-					System.out.println("Contacte esborrat!");
-					break;
-				case "NO":
-					System.out.println("Has cancel·lat l'eliminació");
-					break;
-				default:
-					System.out.println("No t'entenc");
-				}
-
-			} else {
-				System.out.println("no es troba el contacte");
+		if (esNomExistent(nom)) {
+			Contacte c = obtenirContacteExistent(nom);
+			System.out.println("Segur que vols eliminar aquest contacte? SI /NO\n" + c.toString());
+			String rpta = input.next();
+			switch (rpta.toUpperCase()) {
+			case "SI":
+				eliminaContacte(c);
+				System.out.println("Contacte esborrat!");
+				break;
+			case "NO":
+				System.out.println("Has cancel·lat l'eliminació");
+				break;
+			default:
+				System.out.println("No t'entenc");
 			}
+		} else {
+			System.out.println("no es troba el contacte");
 		}
 
 	}
 
 	// método que elimina el telefono del contacto pasado por parámetro
-	public void eliminaEmail(String entrada) throws InvalidParamException {
+	public void eliminaEmail(String nom, String email) throws InvalidParamException {
 		Scanner input = new Scanner(System.in);
-		String regex = "^(elimina email) (.+) (.+@.+) *";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			String email = matcher.group(3).trim();
-			boolean troba = false;
-			if (esNomExistent(nom)) {
-				Contacte c = obtenirContacteExistent(nom);
-				for (String e : c.getEmails()) {
-					if (e.equals(email)) {
-						troba = true;
-						if (c.getEmails().size() == 1) {
-							System.out.println("aquest contacte té un sol correu electrònic, segur que ho vols eliminar? SI / NO\n" + e );
-							String rpta = input.next();
-							switch (rpta.toUpperCase()) {
-							case "SI":
-								c.removeEmail(email);
-								System.out.println("correu eliminat");
-								break;
-							case "NO":
-								System.out.println("Has cancel·lat l'eliminació");
-								break;
-							default:
-								System.out.println("No t'entenc");
-							}
-						} else {
+		boolean troba = false;
+		if (esNomExistent(nom)) {
+			Contacte c = obtenirContacteExistent(nom);
+			for (String e : c.getEmails()) {
+				if (e.equals(email)) {
+					troba = true;
+					if (c.getEmails().size() == 1) {
+						System.out.println("aquest contacte té un sol correu electrònic, segur que ho vols eliminar? SI / NO\n" + e );
+						String rpta = input.next();
+						switch (rpta.toUpperCase()) {
+						case "SI":
 							c.removeEmail(email);
+							System.out.println("correu eliminat");
+							break;
+						case "NO":
+							System.out.println("Has cancel·lat l'eliminació");
+							break;
+						default:
+							System.out.println("No t'entenc");
 						}
+					} else {
+						c.removeEmail(email);
 					}
 				}
-				if (!troba) {
-					System.out.println("correu no disponible");
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+			}
+			if (!troba) {
+				System.out.println("correu no disponible");
 			}
 		} else {
-			System.out.println("format de correu incorrecte");
+			System.out.println("no es troba el contacte");
 		}
 
 	}
 
 	// método que elimina el email del contacto pasado por parámetro
-	public void eliminaTelefon(String entrada) throws InvalidParamException {
+	public void eliminaTelefon(String nom, String numero) throws InvalidParamException {
 		Scanner input = new Scanner(System.in);
-		String regex = "^(elimina num) (.+) (.+\\d+) *";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			String numero = matcher.group(3).trim();
-			boolean troba = false;
-			if (esNomExistent(nom)) {
-				Contacte c = obtenirContacteExistent(nom);
-				for (String n : c.getNums()) {
-					if (n.equals(numero)) {
-						troba = true;
-						if (c.getNums().size() == 1) {
-							System.out.println("aquest contacte té només un telèfon, segur que ho vols eliminar? SI/NO\n"+ n);
-							String rpta = input.next();
-							switch (rpta.toUpperCase()) {
-							case "SI":
-								c.removeNumero(numero);
-								System.out.println("telèfon eliminat");
-								break;
-							case "NO":
-								System.out.println("Has cancel·lat l'eliminació");
-								break;
-							default:
-								System.out.println("No t'entenc");
-							}
-						} else {
+		boolean troba = false;
+		if (esNomExistent(nom)) {
+			Contacte c = obtenirContacteExistent(nom);
+			for (String n : c.getNums()) {
+				if (n.equals(numero)) {
+					troba = true;
+					if (c.getNums().size() == 1) {
+						System.out.println("aquest contacte té només un telèfon, segur que ho vols eliminar? SI/NO\n"+ n);
+						String rpta = input.next();
+						switch (rpta.toUpperCase()) {
+						case "SI":
 							c.removeNumero(numero);
+							System.out.println("telèfon eliminat");
+							break;
+						case "NO":
+							System.out.println("Has cancel·lat l'eliminació");
+							break;
+						default:
+							System.out.println("No t'entenc");
 						}
+					} else {
+						c.removeNumero(numero);
 					}
 				}
-				if (!troba) {
-					System.out.println("telèfon no disponible");
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+			}
+			if (!troba) {
+				System.out.println("telèfon no disponible");
 			}
 		} else {
-			System.out.println("format de telèfon incorrecte");
+			System.out.println("no es troba el contacte");
 		}
 
 	}
 
 	// puja el contacte una posició en l’ordre.
-	public void pujaContacte(String entrada) {
-		String regex = "^(puja) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			if (esNomExistent(nom)) {
-				List<Contacte> contactes = getContactes();
-				Contacte c = obtenirContacteExistent(nom);
-				int posicio = contactes.indexOf(c);
-				System.out.println("las posicio del contacte es: " + posicio);
-				if (posicio != 0) {
-					Contacte tmp = contactes.get(posicio - 1);
-					System.out.println(posicio);
-					// puja el contacte
-					contactes.set(posicio - 1, c);
-					contactes.set(posicio, tmp);
-					System.out.println("fet, la nova posicio de " + c.getNom() + " es: " + contactes.indexOf(c));
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+	public void pujaContacte(String nom) {
+		if (esNomExistent(nom)) {
+			List<Contacte> contactes = getContactes();
+			Contacte c = obtenirContacteExistent(nom);
+			int posicio = contactes.indexOf(c);
+			System.out.println("las posicio del contacte es: " + posicio);
+			if (posicio != 0) {
+				Contacte tmp = contactes.get(posicio - 1);
+				System.out.println(posicio);
+				// puja el contacte
+				contactes.set(posicio - 1, c);
+				contactes.set(posicio, tmp);
+				System.out.println("fet, la nova posicio de " + c.getNom() + " es: " + contactes.indexOf(c));
 			}
 		}
-		// mirar metodo insert
 	}
 
 	// puja el contacte com a primer element del llistat.
-	public void flotaContacte(String entrada) {
-		String regex = "^(flota) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			if (esNomExistent(nom)) {
-				List<Contacte> contactes = getContactes();
-				Contacte c = obtenirContacteExistent(nom);
-				int posicio = contactes.indexOf(c);
-				if (posicio != 0) {
-					contactes.add(0, c);
-					contactes.remove(posicio + 1);
-					System.out.println("fet");
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+	public void flotaContacte(String nom) {
+		if (esNomExistent(nom)) {
+			List<Contacte> contactes = getContactes();
+			Contacte c = obtenirContacteExistent(nom);
+			int posicio = contactes.indexOf(c);
+			if (posicio != 0) {
+				contactes.add(0, c);
+				contactes.remove(posicio + 1);
+				System.out.println("fet");
 			}
 		}
 	}
 
 	// baixa el contacte una posició en l’ordre
-	public void baixaContacte(String entrada) {
-		String regex = "^(baixa) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			if (esNomExistent(nom)) {
-				List<Contacte> contactes = getContactes();
-				Contacte c = obtenirContacteExistent(nom);
-				int posicio = contactes.indexOf(c);
-				if (posicio != contactes.size() - 1) {
-					Contacte tmp = contactes.get(posicio + 1);
-					contactes.set(posicio + 1, c);
-					contactes.set(posicio, tmp);
-					System.out.println("fet");
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+	public void baixaContacte(String nom) {
+		if (esNomExistent(nom)) {
+			List<Contacte> contactes = getContactes();
+			Contacte c = obtenirContacteExistent(nom);
+			int posicio = contactes.indexOf(c);
+			if (posicio != contactes.size() - 1) {
+				Contacte tmp = contactes.get(posicio + 1);
+				contactes.set(posicio + 1, c);
+				contactes.set(posicio, tmp);
+				System.out.println("fet");
 			}
 		}
 	}
 
 	// baixa el contacte a la darrera posició del llistat
-	public void esfonsaContacte(String entrada) {
-		String regex = "^(esfonsa) (.+)$";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			if (esNomExistent(nom)) {
-				List<Contacte> contactes = getContactes();
-				Contacte c = obtenirContacteExistent(nom);
-				int posicio = contactes.indexOf(c);
-				if (posicio != contactes.size() - 1) {
-					contactes.add(contactes.size(), c);
-					contactes.remove(posicio);
-					System.out.println("fet");
-				}
-			} else {
-				System.out.println("no es troba el contacte");
+	public void esfonsaContacte(String nom) {
+		if (esNomExistent(nom)) {
+			List<Contacte> contactes = getContactes();
+			Contacte c = obtenirContacteExistent(nom);
+			int posicio = contactes.indexOf(c);
+			if (posicio != contactes.size() - 1) {
+				contactes.add(contactes.size(), c);
+				contactes.remove(posicio);
+				System.out.println("fet");
 			}
 		}
 	}
 	
 	//troba tots els contactes que comparteixen aquest número de telèfon
-	public void trobaNum(String entrada) {
-		String regex = "^(troba) (.+\\d+) *";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
+	public void trobaNum(String numero) {
 		boolean trobat = false;
-		if (matcher.matches()) {
-			String numero = matcher.group(2).trim();
-			for (Contacte c : getContactes()) {
-				if (esNumeroExistent(c, numero)) {
-					trobat = true;
-					System.out.println(c.toString());
-				}
+		for (Contacte c : getContactes()) {
+			if (esNumeroExistent(c, numero)) {
+				trobat = true;
+				System.out.println(c.toString());
 			}
-			if (!trobat) {
-				System.out.println("no es troba el contacte");
-			}
+		}
+		if (!trobat) {
+			System.out.println("no es troba el contacte");
 		}
 	}
 	
@@ -501,45 +416,26 @@ public class GestorContactes {
 	}
 
 	// método que añade un email a un contacto existente o crea uno nuevo public
-	public void afegeixEmail(String entrada) throws Exception {
-		String regex = "^(afegeix email) (.+) (.+@.+) *";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			String email = matcher.group(3).trim();
-
-			Contacte c = new Contacte(nom);
-			if (esNomExistent(nom)) {
-				afegirContacte(c);
-			} else {
-				c = obtenirContacteExistent(nom);
-			}
-			afegirNumeroAcontacte(c, email);
+	public void afegeixEmail(String nom, String email) throws Exception {
+		Contacte c = new Contacte(nom);
+		if (esNomExistent(nom)) {
+			afegirContacte(c);
 		} else {
-			System.out.println("el format del email és incorrecte");
+			c = obtenirContacteExistent(nom);
 		}
+		afegirNumeroAcontacte(c, email);
+		
 	}
 
 	// método que añade un numero a un contacto existente o crea uno nuevo
-	public void afegeixNum(String entrada) throws Exception {
-		String regex = "^(afegeix num) (.+) (.+\\d+) *";
-		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(entrada);
-		if (matcher.matches()) {
-			String nom = matcher.group(2).trim();
-			String numero = matcher.group(3).trim();
-
-			Contacte c = new Contacte(nom);
-			if (!esNomExistent(nom)) {
-				afegirContacte(c);
-			} else {
-				c = obtenirContacteExistent(nom);
-			}
-			afegirNumeroAcontacte(c, numero);
+	public void afegeixNum(String nom, String numero) throws Exception {
+		Contacte c = new Contacte(nom);
+		if (!esNomExistent(nom)) {
+			afegirContacte(c);
 		} else {
-			System.out.println("el format del nombre és incorrecte");
+			c = obtenirContacteExistent(nom);
 		}
+		afegirNumeroAcontacte(c, numero);
 	}
 
 	// método que gestiona los cambios hechos en la lista
@@ -594,47 +490,51 @@ public class GestorContactes {
 		while (true) {
 			System.out.print(">> ");
 			String input = entrada.nextLine();
-			if (input.equals("sortir")) {
-				System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
-				System.out.print(">> ");
-				String orden = entrada.nextLine();
-				entorn.processaSortida(orden);
-				break;
-			} else if (input.equals("ajuda")) {
-				System.out.println(entorn.mostraAjuda());
-			} else if (input.equals("llista")) {
-				entorn.llistaNomContactes();
-			} else if (input.startsWith("llista")) {
-				System.out.println(entorn.llistaContactesPerString(input));
-			} else if (input.startsWith("mostra")) {
-				System.out.println(entorn.mostraNom(input));
-			} else if (input.startsWith("afegeix num")) {
-				entorn.afegeixNum(input);
-			} else if (input.startsWith("afegeix email")) {
-				entorn.afegeixEmail(input);
-			} else if (input.startsWith("elimina contacte")) {
-				entorn.esborrarContacte(input);
-			} else if (input.startsWith("elimina email")) {
-				entorn.eliminaEmail(input);
-			} else if (input.startsWith("elimina num")) {
-				entorn.eliminaTelefon(input);
-			} else if (input.startsWith("puja")) {
-				entorn.pujaContacte(input);
-			} else if (input.startsWith("flota")) {
-				entorn.flotaContacte(input);
-			} else if (input.startsWith("baixa")) {
-				entorn.baixaContacte(input);
-			} else if (input.startsWith("esfonsa")) {
-				entorn.esfonsaContacte(input);
-			} else if (input.startsWith("troba")) {
-				entorn.trobaNum(input);
-			} else if (input.equals("canvis")) {
-				entorn.mostraCanvis();
+			Comanda comanda = Comanda.processaComanda(input);
+			if (!comanda.esComandaDesconeguda()) {
+				if (comanda.getNom().equals("sortir")) {
+					System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
+					System.out.print(">> ");
+					String orden = entrada.nextLine();
+					entorn.processaSortida(orden);
+					break;
+				}else if (comanda.getNom().equals("ajuda")) {
+					System.out.println(entorn.mostraAjuda());
+				} else if (comanda.getNom().equals("llista")) {
+					entorn.llistaNomContactes();
+				} else if (comanda.getNom().equals("llista str")) {
+					System.out.println(entorn.llistaContactesPerString(comanda.getArgument(0)));
+				} else if (comanda.getNom().equals("mostra nom")) {
+					System.out.println(entorn.mostraNom(comanda.getArgument(0)));
+				} else if (comanda.getNom().equals("afegeix num")) {
+					entorn.afegeixNum(comanda.getArgument(0),comanda.getArgument(1));
+				} else if (comanda.getNom().equals("afegeix email")) {
+					entorn.afegeixEmail(comanda.getArgument(0),comanda.getArgument(1));
+				} else if (comanda.getNom().equals("elimina contacte")) {
+					entorn.esborrarContacte(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("elimina email")) {
+					entorn.eliminaEmail(comanda.getArgument(0),comanda.getArgument(1));
+				} else if (comanda.getNom().equals("elimina num")) {
+					entorn.eliminaTelefon(comanda.getArgument(0),comanda.getArgument(1));
+				} else if (comanda.getNom().equals("puja nom")) {
+					entorn.pujaContacte(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("flota nom")) {
+					entorn.flotaContacte(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("baixa nom")) {
+					entorn.baixaContacte(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("esfonsa nom")) {
+					entorn.esfonsaContacte(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("troba num")) {
+					entorn.trobaNum(comanda.getArgument(0));
+				} else if (comanda.getNom().equals("canvis")) {
+					entorn.mostraCanvis();
+				}
 			} else {
 				System.out.println("No t'entenc");
 			}
 		}
 		System.out.println("has sortit correctament");
+			
 
 	}
 

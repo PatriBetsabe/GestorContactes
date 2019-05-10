@@ -1,6 +1,7 @@
 
 /*
  * Implementació d'una comanda
+
  *
  * Una comanda té:
  * - un nom
@@ -32,13 +33,13 @@ public class Comanda {
     private final List<String> arguments;
     private final boolean comandaDesconeguda;
 
-    private Comanda(String nom, String... arguments) {
+    public Comanda(String nom, String... arguments) {
         this.nom = nom;
         this.arguments = Arrays.asList(arguments);
         this.comandaDesconeguda = false;
     }
 
-    private Comanda() {
+    public Comanda() {
         nom = null;
         arguments = null;
         comandaDesconeguda = true;
