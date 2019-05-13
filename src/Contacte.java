@@ -9,16 +9,11 @@ public class Contacte {
 	private ArrayList<String> emails = new ArrayList<String>();
 	private Canvi canvi = Canvi.SENSECANVIS;
 
-	// Constructor por defecto
-	public Contacte() {
-	}
-	
-
 	/* Constructor con solo el nombre del contacto */
 	public Contacte(String nom) throws InvalidParamException {
-		if (nom.equals("") || nom == null)
+		if (nom == null || nom.isEmpty() || nom.trim().isEmpty() ) {
 			throw new InvalidParamException("Introduce un nombre");
-		else {
+		} else {
 			this.nom = nom;
 		}
 	}
