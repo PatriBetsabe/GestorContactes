@@ -37,6 +37,7 @@ public class GestorContactes {
 			}
 			afegirDadesAcontacte(c, email, numero);
 			c.setCanvi(Canvi.SENSECANVIS);
+			c.setGuardatEnFitxer(true);
 		}
 	}
 	
@@ -61,7 +62,7 @@ public class GestorContactes {
 	}
 
 	public void afegirNumeroAcontacte(Contacte c, String numero) {
-		if (!numero.equals("")) {
+		if (!numero.isEmpty()) {
 			if (!esNumeroExistent(c, numero)) {
 				c.addNumero(numero);
 			} else {
@@ -71,7 +72,7 @@ public class GestorContactes {
 	}
 
 	public void afegirEmailAContacte(Contacte c, String email) {
-		if (!email.equals("")) {
+		if (!email.isEmpty()) {
 			if (!esEmailExistent(c, email)) {
 				c.addEmail(email);
 			} else {
@@ -263,11 +264,12 @@ public class GestorContactes {
 		boolean troba = false;
 		if (esNomExistent(nom)) {
 			Contacte c = obtenirContacteExistent(nom);
-			for (String e : c.getEmails()) {
-				if (e.equals(email)) {
+			for (int i=0; i<c.getEmails().size();i++) {
+				if (c.getEmails().get(i).equals(email)) {
 					troba = true;
 					if (c.getEmails().size() == 1) {
-						System.out.println("aquest contacte té un sol correu electrònic, segur que ho vols eliminar? SI / NO\n" + e );
+						System.out.println("aquest contacte té un sol correu electrònic, segur que ho vols eliminar? SI / NO");
+						System.out.print(">> ");
 						String rpta = input.next();
 						switch (rpta.toUpperCase()) {
 						case "SI":
@@ -291,7 +293,6 @@ public class GestorContactes {
 		} else {
 			System.out.println("no es troba el contacte");
 		}
-
 	}
 
 	// método que elimina el email del contacto pasado por parámetro
@@ -300,11 +301,12 @@ public class GestorContactes {
 		boolean troba = false;
 		if (esNomExistent(nom)) {
 			Contacte c = obtenirContacteExistent(nom);
-			for (String n : c.getNums()) {
-				if (n.equals(numero)) {
+			for (int i=0; i<c.getNums().size();i++) {
+				if (c.getNums().get(i).equals(numero)) {
 					troba = true;
 					if (c.getNums().size() == 1) {
-						System.out.println("aquest contacte té només un telèfon, segur que ho vols eliminar? SI/NO\n"+ n);
+						System.out.println("aquest contacte té només un telèfon, segur que ho vols eliminar? SI/NO");
+						System.out.print(">> ");
 						String rpta = input.next();
 						switch (rpta.toUpperCase()) {
 						case "SI":
@@ -418,12 +420,12 @@ public class GestorContactes {
 	// método que añade un email a un contacto existente o crea uno nuevo public
 	public void afegeixEmail(String nom, String email) throws Exception {
 		Contacte c = new Contacte(nom);
-		if (esNomExistent(nom)) {
+		if (!esNomExistent(nom)) {
 			afegirContacte(c);
 		} else {
 			c = obtenirContacteExistent(nom);
 		}
-		afegirNumeroAcontacte(c, email);
+		afegirEmailAContacte(c, email);
 		
 	}
 

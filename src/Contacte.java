@@ -5,10 +5,20 @@ public class Contacte {
 
 	/* propiedades */
 	private String nom;
-	private ArrayList<String> nums = new ArrayList<String>();
-	private ArrayList<String> emails = new ArrayList<String>();
-	private Canvi canvi = Canvi.SENSECANVIS;
+	private ArrayList<String> nums;
+	private ArrayList<String> emails;
+	private Canvi canvi;
+	private boolean guardatEnFitxer;
 
+	
+	/* Contructo específico*/
+	public Contacte() {
+		this.nums = new ArrayList<String>(); 
+		this.emails = new ArrayList<String>();
+		this.canvi = Canvi.AFEGIT;
+		this.guardatEnFitxer = false;
+	}
+	
 	/* Constructor con solo el nombre del contacto */
 	public Contacte(String nom) throws InvalidParamException {
 		if (nom == null || nom.isEmpty() || nom.trim().isEmpty() ) {
@@ -62,6 +72,14 @@ public class Contacte {
 		this.emails.remove(email);
 	}
 	
+	public boolean estaGuardatEnFitxer() {
+		return guardatEnFitxer;
+	}
+	
+	public void setGuardatEnFitxer(boolean guardatEnFitxer) {
+		this.guardatEnFitxer = guardatEnFitxer;
+	}
+	
 	@Override
 	public String toString() {
 		String texto = "Nom: " + this.getNom() + "\n";
@@ -76,8 +94,6 @@ public class Contacte {
 				texto += "Email: " + e + "\n";
 			}
 		}
-		
-		texto += this.getCanvi().name();
 		return texto;
 	}
 }
