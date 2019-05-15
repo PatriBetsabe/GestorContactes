@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
-	private List<Contacte> contactesFitxer;
+	private List<Contacte> contactesCopia = new ArrayList<>();
+	private List<Contacte> contactesEliminats = new ArrayList<>();
 
 	public void extraeDados(String text) throws Exception {
 		String regex = "^(.+) (NUM|EMAIL) (.+)$";
@@ -38,10 +39,22 @@ public class GestorContactes {
 			afegirDadesAcontacte(c, email, numero);
 			c.setCanvi(Canvi.SENSECANVIS);
 			c.setGuardatEnFitxer(true);
+			// copia de contactos del fichero
+			contactesCopia=new ArrayList<>(contactes);
 		}
 	}
+
+	// método que obtiene la una copia de los contactos 
+		public List<Contacte> getCopiaContactes() {
+			return contactesCopia;
+		}
 	
-	
+	// devuelve la copia de contactos
+	public void mostraCopiaContactes() {
+		for (Contacte c : getCopiaContactes()) {
+			System.out.println(c.getNom()  +" "+ c.getCanvi().name());
+		}
+	}
 	
 	public List<Contacte> obtenirContactesFitxer(String numero) throws Exception{
 		List<Contacte> llistaContactes = new ArrayList<>();
@@ -191,17 +204,19 @@ public class GestorContactes {
 	public String llistaContactesPerString(String str) {
 		String respuesta = "";
 		for (Contacte c : getContactes()) {
-			if (c.getNom().indexOf(str) != -1) {
-				respuesta += c.toString();
-			}
-			for (String e : c.getEmails()) {
-				if (e.indexOf(str) != -1) {
+			if (!c.teMarcaEliminat()) {
+				if (c.getNom().indexOf(str) != -1) {
 					respuesta += c.toString();
 				}
-			}
-			for (String n : c.getNums()) {
-				if (n.indexOf(str) != -1) {
-					respuesta += c.toString();
+				for (String e : c.getEmails()) {
+					if (e.indexOf(str) != -1) {
+						respuesta += c.toString();
+					}
+				}
+				for (String n : c.getNums()) {
+					if (n.indexOf(str) != -1) {
+						respuesta += c.toString();
+					}
 				}
 			}
 		}
@@ -219,7 +234,9 @@ public class GestorContactes {
 			System.out.println("De moment no hi ha contactes");
 		} else {
 			for (Contacte c : contactes) {
-				System.out.println(c.getNom());
+				if (!c.teMarcaEliminat()) {
+					System.out.println(c.getNom());
+				}		
 			}
 		}
 	}
@@ -229,7 +246,9 @@ public class GestorContactes {
 		String respuesta = "no es troba el contacte";
 		if (esNomExistent(nom)) {
 			Contacte c = obtenirContacteExistent(nom);
-			respuesta = c.toString();
+			if (!c.teMarcaEliminat()) {
+				respuesta = c.toString();
+			}	
 		}
 		return respuesta;
 	}
@@ -243,7 +262,9 @@ public class GestorContactes {
 			String rpta = input.next();
 			switch (rpta.toUpperCase()) {
 			case "SI":
-				eliminaContacte(c);
+				//eliminaContacte(c);
+				marcaContacteEliminat(c);
+				contactesEliminats.add(c);
 				System.out.println("Contacte esborrat!");
 				break;
 			case "NO":
@@ -284,6 +305,7 @@ public class GestorContactes {
 						}
 					} else {
 						c.removeEmail(email);
+						marcaContacteModificat(c);
 					}
 				}
 			}
@@ -321,6 +343,7 @@ public class GestorContactes {
 						}
 					} else {
 						c.removeNumero(numero);
+						marcaContacteModificat(c);
 					}
 				}
 			}
@@ -338,15 +361,17 @@ public class GestorContactes {
 		if (esNomExistent(nom)) {
 			List<Contacte> contactes = getContactes();
 			Contacte c = obtenirContacteExistent(nom);
-			int posicio = contactes.indexOf(c);
-			System.out.println("las posicio del contacte es: " + posicio);
-			if (posicio != 0) {
-				Contacte tmp = contactes.get(posicio - 1);
-				System.out.println(posicio);
-				// puja el contacte
-				contactes.set(posicio - 1, c);
-				contactes.set(posicio, tmp);
-				System.out.println("fet, la nova posicio de " + c.getNom() + " es: " + contactes.indexOf(c));
+			if (!c.teMarcaEliminat()) {
+				int posicio = contactes.indexOf(c);
+				if (posicio != 0) {
+					Contacte tmp = contactes.get(posicio - 1);
+					System.out.println(posicio);
+					// puja el contacte
+					contactes.set(posicio - 1, c);
+					contactes.set(posicio, tmp);
+					System.out.println("fet");
+					marcaContacteModificat(c);
+				}
 			}
 		}
 	}
@@ -356,11 +381,14 @@ public class GestorContactes {
 		if (esNomExistent(nom)) {
 			List<Contacte> contactes = getContactes();
 			Contacte c = obtenirContacteExistent(nom);
-			int posicio = contactes.indexOf(c);
-			if (posicio != 0) {
-				contactes.add(0, c);
-				contactes.remove(posicio + 1);
-				System.out.println("fet");
+			if (!c.teMarcaEliminat()) {
+				int posicio = contactes.indexOf(c);
+				if (posicio != 0) {
+					contactes.add(0, c);
+					contactes.remove(posicio + 1);
+					System.out.println("fet");
+					marcaContacteModificat(c);
+				}
 			}
 		}
 	}
@@ -370,13 +398,17 @@ public class GestorContactes {
 		if (esNomExistent(nom)) {
 			List<Contacte> contactes = getContactes();
 			Contacte c = obtenirContacteExistent(nom);
-			int posicio = contactes.indexOf(c);
-			if (posicio != contactes.size() - 1) {
-				Contacte tmp = contactes.get(posicio + 1);
-				contactes.set(posicio + 1, c);
-				contactes.set(posicio, tmp);
-				System.out.println("fet");
+			if (!c.teMarcaEliminat()) {
+				int posicio = contactes.indexOf(c);
+				if (posicio != contactes.size() - 1) {
+					Contacte tmp = contactes.get(posicio + 1);
+					contactes.set(posicio + 1, c);
+					contactes.set(posicio, tmp);
+					System.out.println("fet");
+					marcaContacteModificat(c);
+				}
 			}
+			
 		}
 	}
 
@@ -385,11 +417,14 @@ public class GestorContactes {
 		if (esNomExistent(nom)) {
 			List<Contacte> contactes = getContactes();
 			Contacte c = obtenirContacteExistent(nom);
-			int posicio = contactes.indexOf(c);
-			if (posicio != contactes.size() - 1) {
-				contactes.add(contactes.size(), c);
-				contactes.remove(posicio);
-				System.out.println("fet");
+			if (!c.teMarcaEliminat()) {
+				int posicio = contactes.indexOf(c);
+				if (posicio != contactes.size() - 1) {
+					contactes.add(contactes.size(), c);
+					contactes.remove(posicio);
+					System.out.println("fet");
+					marcaContacteModificat(c);
+				}
 			}
 		}
 	}
@@ -412,33 +447,51 @@ public class GestorContactes {
 	public void mostraCanvis() {
 		// mostrar los cambios de los contactos (añadidos, modificados, borrados)
 		for (Contacte c : getContactes()) {
-			System.out.println(c.toString());
-			// cambios respecto del fichero
+			System.out.println(c.getNom() + " " + c.getCanvi().name() );
 		}
 	}
 
 	// método que añade un email a un contacto existente o crea uno nuevo public
 	public void afegeixEmail(String nom, String email) throws Exception {
 		Contacte c = new Contacte(nom);
-		if (!esNomExistent(nom)) {
-			afegirContacte(c);
-		} else {
-			c = obtenirContacteExistent(nom);
+		if (!c.teMarcaEliminat()) {
+			if (!esNomExistent(nom)) {
+				afegirContacte(c);
+			} else {
+				c = obtenirContacteExistent(nom);
+			}
+			afegirEmailAContacte(c, email);
+			marcaContacteModificat(c);
 		}
-		afegirEmailAContacte(c, email);
-		
 	}
 
 	// método que añade un numero a un contacto existente o crea uno nuevo
 	public void afegeixNum(String nom, String numero) throws Exception {
 		Contacte c = new Contacte(nom);
-		if (!esNomExistent(nom)) {
-			afegirContacte(c);
-		} else {
-			c = obtenirContacteExistent(nom);
+			if (!esNomExistent(nom)) {
+				afegirContacte(c);
+			} else {
+				c = obtenirContacteExistent(nom);
+			}
+			if (!c.teMarcaEliminat()) {
+				afegirNumeroAcontacte(c, numero);
+				marcaContacteModificat(c);
+			}		
 		}
-		afegirNumeroAcontacte(c, numero);
+	
+	// método que pone como contacto modificado
+	public void marcaContacteModificat(Contacte c) {
+		if (c.estaGuardatEnFitxer()) {
+			c.setCanvi(Canvi.MODIFICAT);
+		}
 	}
+	
+	// método que pone como contacto eliminado
+		public void marcaContacteEliminat(Contacte c) {
+			if (c.estaGuardatEnFitxer()) {
+				c.setCanvi(Canvi.ELIMINAT);
+			}
+		}
 
 	// método que gestiona los cambios hechos en la lista
 	public void processaSortida(String entrada) {
@@ -504,6 +557,8 @@ public class GestorContactes {
 					System.out.println(entorn.mostraAjuda());
 				} else if (comanda.getNom().equals("llista")) {
 					entorn.llistaNomContactes();
+					System.out.println("---------------------------");
+					entorn.mostraCopiaContactes();
 				} else if (comanda.getNom().equals("llista str")) {
 					System.out.println(entorn.llistaContactesPerString(comanda.getArgument(0)));
 				} else if (comanda.getNom().equals("mostra nom")) {

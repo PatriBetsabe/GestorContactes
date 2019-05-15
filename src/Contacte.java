@@ -25,6 +25,10 @@ public class Contacte {
 			throw new InvalidParamException("Introduce un nombre");
 		} else {
 			this.nom = nom;
+			this.nums = new ArrayList<String>(); 
+			this.emails = new ArrayList<String>();
+			this.canvi = Canvi.AFEGIT;
+			this.guardatEnFitxer = false;
 		}
 	}
 
@@ -78,6 +82,10 @@ public class Contacte {
 	
 	public void setGuardatEnFitxer(boolean guardatEnFitxer) {
 		this.guardatEnFitxer = guardatEnFitxer;
+	}
+	
+	public boolean teMarcaEliminat() {
+		return getCanvi().equals(Canvi.ELIMINAT);
 	}
 	
 	@Override
