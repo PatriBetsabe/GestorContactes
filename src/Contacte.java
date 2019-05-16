@@ -97,6 +97,18 @@ public class Contacte {
 		if (!emails.isEmpty()) {
 				texto += "\nEmail: " + emails.toString();
 			}
+		texto +="\n";
 		return texto;
+	}
+	
+	public ArrayList<String> contacteDetallat(){
+		ArrayList<String> linies = new ArrayList<String>();
+		for(String n :getNums()) {
+			linies.add(getNom() + " NUM " + n + "\n");
+		}
+		for(String e :getEmails()) {
+			linies.add(getNom() + " EMAIL " + e + "\n");
+		}
+		return linies;
 	}
 }

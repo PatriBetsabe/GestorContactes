@@ -203,22 +203,27 @@ public class GestorContactes {
 	// método que lista los contactos que contienen el substring
 	public String llistaContactesPerString(String str) {
 		String respuesta = "";
+		boolean llistat = false;
 		for (Contacte c : getContactes()) {
 			if (!c.teMarcaEliminat()) {
-				if (c.getNom().indexOf(str) != -1) {
+				if (c.getNom().indexOf(str) != -1 && !llistat) {
+					llistat = true;
 					respuesta += c.toString();
 				}
-				for (String e : c.getEmails()) {
-					if (e.indexOf(str) != -1) {
-						respuesta += c.toString();
-					}
-				}
 				for (String n : c.getNums()) {
-					if (n.indexOf(str) != -1) {
+					if (n.indexOf(str) != -1 && !llistat) {
+						llistat = true;
 						respuesta += c.toString();
 					}
 				}
+				for (String e : c.getEmails()) {
+					if (e.indexOf(str) != -1 && !llistat) {
+						llistat = true;
+						respuesta += c.toString() +"\n";
+					}
+				}				
 			}
+			llistat = false;
 		}
 
 		if (respuesta.equals("")) {
@@ -230,13 +235,17 @@ public class GestorContactes {
 	// método que lista el nombre de los contactos contenidos en la lista
 	public void llistaNomContactes() throws Exception {
 		List<Contacte> contactes = this.getContactes();
-		if (contactes.isEmpty()) {
+		List<Contacte> contactesToLlistar = new ArrayList<>();
+		for (Contacte c : contactes) {
+			if (!c.teMarcaEliminat()) {
+				contactesToLlistar.add(c);
+			}
+		}		
+		if (contactesToLlistar.isEmpty()) {
 			System.out.println("De moment no hi ha contactes");
 		} else {
-			for (Contacte c : contactes) {
-				if (!c.teMarcaEliminat()) {
-					System.out.println(c.getNom());
-				}		
+			for (Contacte c : contactesToLlistar) {
+					System.out.println(c.getNom());	
 			}
 		}
 	}
@@ -523,12 +532,14 @@ public class GestorContactes {
 	}
 
 	// método que gestiona los cambios hechos en la lista
-	public boolean processaSortida(String entrada) {
+	public boolean processaSortida(String entrada) throws Exception {
 		switch (entrada.toUpperCase()) {
 		case "G":
+			guardarCanvis();
 			System.out.println("Canvis guardats");
 			return true;
 		case "I":
+			ignorarCanvis();
 			System.out.println("Canvis ignorats");
 			return true;
 		case "C":
@@ -540,6 +551,49 @@ public class GestorContactes {
 		}
 
 	}
+	
+	public void guardarCanvis() throws Exception {
+		ArrayList<String> linies = new ArrayList<>();
+		List<Contacte> contactes = getContactes();
+		if (!contactes.isEmpty()) {
+			for (Contacte c : contactes) {
+				if (c.teMarcaEliminat()) {
+					contactes.remove(c);
+				}
+			}
+		}	
+		if (!contactes.isEmpty()) {
+			for (Contacte c : contactes) {
+				c.setCanvi(Canvi.SENSECANVIS);
+				linies.addAll(c.contacteDetallat());
+			}
+		}
+		writeTextFile("contactes.lst", linies, false);
+	}
+	
+	public void ignorarCanvis() {
+		List<Contacte> contactes = getContactes();
+		if (!contactes.isEmpty()) {
+			for (Contacte c : contactes) {
+				c.setCanvi(Canvi.SENSECANVIS);
+			}
+		}
+		
+	}
+	
+	/* Donat el camí a un fitxer i una seqüència de línies de text, escriu les
+     * línies de text al fitxer indicat.
+     * El booleà amplia permet indicar:
+     *  true: afegir les línies després dels continguts existents al fitxer
+     *  false: reemplaçar els continguts anteriors al fitxer pels nous */
+    private static void writeTextFile(String path,ArrayList<String> linies,boolean amplia) throws Exception {
+        FileWriter fileWriter = new FileWriter(path, amplia);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        for (String linia: linies) {
+            bufferedWriter.write(linia);
+        }
+        bufferedWriter.close();
+    }
 
 	/*
 	 * Donat el camí a un fitxer, llegeix els seus continguts i els retorna en forma
