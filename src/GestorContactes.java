@@ -11,8 +11,6 @@ import java.util.regex.Pattern;
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
-	private List<Contacte> contactesCopia = new ArrayList<>();
-	private List<Contacte> contactesEliminats = new ArrayList<>();
 
 	public void extraeDados(String text) throws Exception {
 		String regex = "^(.+) (NUM|EMAIL) (.+)$";
@@ -39,20 +37,7 @@ public class GestorContactes {
 			afegirDadesAcontacte(c, email, numero);
 			c.setCanvi(Canvi.SENSECANVIS);
 			c.setGuardatEnFitxer(true);
-			// copia de contactos del fichero
-			contactesCopia=new ArrayList<>(contactes);
-		}
-	}
 
-	// método que obtiene la una copia de los contactos 
-		public List<Contacte> getCopiaContactes() {
-			return contactesCopia;
-		}
-	
-	// devuelve la copia de contactos
-	public void mostraCopiaContactes() {
-		for (Contacte c : getCopiaContactes()) {
-			System.out.println(c.getNom()  +" "+ c.getCanvi().name());
 		}
 	}
 	
@@ -277,7 +262,6 @@ public class GestorContactes {
 				}else {
 					eliminaContacte(c);
 				}
-				contactesEliminats.add(c);
 				System.out.println("Contacte eliminat!");
 				break;
 			case "NO":
@@ -539,7 +523,6 @@ public class GestorContactes {
 			System.out.println("Canvis guardats");
 			return true;
 		case "I":
-			ignorarCanvis();
 			System.out.println("Canvis ignorats");
 			return true;
 		case "C":
@@ -556,31 +539,22 @@ public class GestorContactes {
 		ArrayList<String> linies = new ArrayList<>();
 		List<Contacte> contactes = getContactes();
 		if (!contactes.isEmpty()) {
-			for (Contacte c : contactes) {
-				if (c.teMarcaEliminat()) {
-					contactes.remove(c);
+			for (int i=0; i<contactes.size();i++) {
+				if (contactes.get(i).teMarcaEliminat()) {
+					contactes.remove(contactes.get(i));
 				}
 			}
 		}	
 		if (!contactes.isEmpty()) {
-			for (Contacte c : contactes) {
-				c.setCanvi(Canvi.SENSECANVIS);
-				linies.addAll(c.contacteDetallat());
+			for (int i=0; i<contactes.size();i++) {
+				contactes.get(i).setCanvi(Canvi.SENSECANVIS);
+				linies.addAll(contactes.get(i).contacteDetallat());
 			}
 		}
 		writeTextFile("contactes.lst", linies, false);
+
 	}
-	
-	public void ignorarCanvis() {
-		List<Contacte> contactes = getContactes();
-		if (!contactes.isEmpty()) {
-			for (Contacte c : contactes) {
-				c.setCanvi(Canvi.SENSECANVIS);
-			}
-		}
-		
-	}
-	
+
 	/* Donat el camí a un fitxer i una seqüència de línies de text, escriu les
      * línies de text al fitxer indicat.
      * El booleà amplia permet indicar:
@@ -643,8 +617,6 @@ public class GestorContactes {
 					System.out.println(entorn.mostraAjuda());
 				} else if (comanda.getNom().equals("llista")) {
 					entorn.llistaNomContactes();
-					System.out.println("---------------------------");
-					entorn.mostraCopiaContactes();
 				} else if (comanda.getNom().equals("llista str")) {
 					System.out.println(entorn.llistaContactesPerString(comanda.getArgument(0)));
 				} else if (comanda.getNom().equals("mostra nom")) {
