@@ -254,18 +254,22 @@ public class GestorContactes {
 	}
 
 	// elimina el contacto
-	public void esborrarContacte(String nom) throws Exception {
+	public void eliminarContacte(String nom) throws Exception {
 		Scanner input = new Scanner(System.in);
 		if (esNomExistent(nom)) {
 			Contacte c = obtenirContacteExistent(nom);
-			System.out.println("Segur que vols eliminar aquest contacte? SI /NO\n" + c.toString());
+			System.out.println("Segur que vols eliminar aquest contacte? SI/NO\n" + c.toString());
+			System.out.print(">> ");
 			String rpta = input.next();
 			switch (rpta.toUpperCase()) {
 			case "SI":
-				//eliminaContacte(c);
-				marcaContacteEliminat(c);
+				if (c.estaGuardatEnFitxer()) {
+					marcaContacteEliminat(c);
+				}else {
+					eliminaContacte(c);
+				}
 				contactesEliminats.add(c);
-				System.out.println("Contacte esborrat!");
+				System.out.println("Contacte eliminat!");
 				break;
 			case "NO":
 				System.out.println("Has cancel·lat l'eliminació");
@@ -365,14 +369,17 @@ public class GestorContactes {
 				int posicio = contactes.indexOf(c);
 				if (posicio != 0) {
 					Contacte tmp = contactes.get(posicio - 1);
-					System.out.println(posicio);
 					// puja el contacte
 					contactes.set(posicio - 1, c);
 					contactes.set(posicio, tmp);
 					System.out.println("fet");
 					marcaContacteModificat(c);
 				}
+			}else {
+				System.out.println("no es troba el contacte");
 			}
+		}else {
+			System.out.println("no es troba el contacte");
 		}
 	}
 
@@ -389,7 +396,11 @@ public class GestorContactes {
 					System.out.println("fet");
 					marcaContacteModificat(c);
 				}
+			}else {
+				System.out.println("no es troba el contacte");
 			}
+		}else {
+			System.out.println("no es troba el contacte");
 		}
 	}
 
@@ -407,8 +418,12 @@ public class GestorContactes {
 					System.out.println("fet");
 					marcaContacteModificat(c);
 				}
+			}else {
+				System.out.println("no es troba el contacte");
 			}
 			
+		}else {
+			System.out.println("no es troba el contacte");
 		}
 	}
 
@@ -425,7 +440,11 @@ public class GestorContactes {
 					System.out.println("fet");
 					marcaContacteModificat(c);
 				}
+			}else {
+				System.out.println("no es troba el contacte");
 			}
+		}else {
+			System.out.println("no es troba el contacte");
 		}
 	}
 	
@@ -454,28 +473,38 @@ public class GestorContactes {
 	// método que añade un email a un contacto existente o crea uno nuevo public
 	public void afegeixEmail(String nom, String email) throws Exception {
 		Contacte c = new Contacte(nom);
-		if (!c.teMarcaEliminat()) {
-			if (!esNomExistent(nom)) {
-				afegirContacte(c);
-			} else {
-				c = obtenirContacteExistent(nom);
+		if (esNomExistent(nom)) {
+			c = obtenirContacteExistent(nom);
+			if (c.teMarcaEliminat()) {
+				Contacte nouC = new Contacte(c.getNom());
+				afegirContacte(nouC);
+				afegirEmailAContacte(nouC, email);
+			}else {
+				afegirEmailAContacte(c, email);
+				marcaContacteModificat(c);
 			}
+		}else {
+			afegirContacte(c);
 			afegirEmailAContacte(c, email);
-			marcaContacteModificat(c);
-		}
+		}		
 	}
 
 	// método que añade un numero a un contacto existente o crea uno nuevo
 	public void afegeixNum(String nom, String numero) throws Exception {
 		Contacte c = new Contacte(nom);
-			if (!esNomExistent(nom)) {
-				afegirContacte(c);
-			} else {
+			if (esNomExistent(nom)) {
 				c = obtenirContacteExistent(nom);
-			}
-			if (!c.teMarcaEliminat()) {
+				if (c.teMarcaEliminat()) {
+					Contacte nouC = new Contacte(c.getNom());
+					afegirContacte(nouC);
+					afegirNumeroAcontacte(nouC, numero);
+				}else {
+					afegirNumeroAcontacte(c, numero);
+					marcaContacteModificat(c);
+				}
+			}else {
+				afegirContacte(c);
 				afegirNumeroAcontacte(c, numero);
-				marcaContacteModificat(c);
 			}		
 		}
 	
@@ -487,11 +516,11 @@ public class GestorContactes {
 	}
 	
 	// método que pone como contacto eliminado
-		public void marcaContacteEliminat(Contacte c) {
-			if (c.estaGuardatEnFitxer()) {
-				c.setCanvi(Canvi.ELIMINAT);
-			}
+	public void marcaContacteEliminat(Contacte c) {
+		if (c.estaGuardatEnFitxer()) {
+			c.setCanvi(Canvi.ELIMINAT);
 		}
+	}
 
 	// método que gestiona los cambios hechos en la lista
 	public boolean processaSortida(String entrada) {
@@ -571,7 +600,7 @@ public class GestorContactes {
 				} else if (comanda.getNom().equals("afegeix email")) {
 					entorn.afegeixEmail(comanda.getArgument(0),comanda.getArgument(1));
 				} else if (comanda.getNom().equals("elimina contacte")) {
-					entorn.esborrarContacte(comanda.getArgument(0));
+					entorn.eliminarContacte(comanda.getArgument(0));
 				} else if (comanda.getNom().equals("elimina email")) {
 					entorn.eliminaEmail(comanda.getArgument(0),comanda.getArgument(1));
 				} else if (comanda.getNom().equals("elimina num")) {

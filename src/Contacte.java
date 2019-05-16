@@ -90,18 +90,13 @@ public class Contacte {
 	
 	@Override
 	public String toString() {
-		String texto = "Nom: " + this.getNom() + "\n";
+		String texto = "Nom: " + this.getNom();
 		if (!nums.isEmpty()) {
-			for (String n : getNums()) {
-				texto += "Numero: " + n +"\n";
-			}
-		}
-		
+				texto += "\nNumero: " + nums.toString();
+			}		
 		if (!emails.isEmpty()) {
-			for (String e : getEmails()) {
-				texto += "Email: " + e + "\n";
+				texto += "\nEmail: " + emails.toString();
 			}
-		}
 		return texto;
 	}
 }
