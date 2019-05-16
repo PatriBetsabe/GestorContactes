@@ -494,19 +494,20 @@ public class GestorContactes {
 		}
 
 	// método que gestiona los cambios hechos en la lista
-	public void processaSortida(String entrada) {
-		switch (entrada) {
+	public boolean processaSortida(String entrada) {
+		switch (entrada.toUpperCase()) {
 		case "G":
 			System.out.println("Canvis guardats");
-			break;
+			return true;
 		case "I":
 			System.out.println("Canvis ignorats");
-			break;
+			return true;
 		case "C":
 			System.out.println("Sortida cancel·lada");
-			break;
+			return false;
 		default:
 			System.out.println("no t'entenc ");
+			return false;
 		}
 
 	}
@@ -551,8 +552,10 @@ public class GestorContactes {
 					System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
 					System.out.print(">> ");
 					String orden = entrada.nextLine();
-					entorn.processaSortida(orden);
-					break;
+					boolean demanaSortir = entorn.processaSortida(orden);
+					if (demanaSortir) {
+						break;
+					}
 				}else if (comanda.getNom().equals("ajuda")) {
 					System.out.println(entorn.mostraAjuda());
 				} else if (comanda.getNom().equals("llista")) {
