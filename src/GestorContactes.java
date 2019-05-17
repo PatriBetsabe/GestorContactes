@@ -1,4 +1,9 @@
 
+/*
+ * Programa que ens permet 
+ * gestionar una llista de contactes.
+ * 
+ * */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -12,6 +17,7 @@ import java.util.regex.Pattern;
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
 
+	//extrae los contactos del fichero y los añade a lista de contactos
 	public void extraeDados(String text) throws Exception {
 		String regex = "^(.+) (NUM|EMAIL) (.+)$";
 		Pattern pattern = Pattern.compile(regex);
@@ -40,12 +46,6 @@ public class GestorContactes {
 
 		}
 	}
-	
-	public List<Contacte> obtenirContactesFitxer(String numero) throws Exception{
-		List<Contacte> llistaContactes = new ArrayList<>();
-		ArrayList<String> linies = readTextFile("contactes.lst");
-		return llistaContactes;
-	}
 
 	// retorna el contacto buscando por el nombre
 	public Contacte obtenirContacteExistent(String nom) {
@@ -53,12 +53,14 @@ public class GestorContactes {
 		return contacte;
 	}
 
+	// añade un email y/o numero al contacto pasado por parametro
 	public void afegirDadesAcontacte(Contacte c, String email, String numero) {
 		afegirEmailAContacte(c, email);
 		afegirNumeroAcontacte(c, numero);
 		
 	}
 
+	// añade un numero de telefono al contacto
 	public void afegirNumeroAcontacte(Contacte c, String numero) {
 		if (!numero.isEmpty()) {
 			if (!esNumeroExistent(c, numero)) {
@@ -69,6 +71,7 @@ public class GestorContactes {
 		}
 	}
 
+	// añade una dirección de correo al contacto
 	public void afegirEmailAContacte(Contacte c, String email) {
 		if (!email.isEmpty()) {
 			if (!esEmailExistent(c, email)) {
@@ -457,13 +460,12 @@ public class GestorContactes {
 	
 	// mostra els contactes que han estat canviats respecte el que hi ha guardat.
 	public void mostraCanvis() {
-		// mostrar los cambios de los contactos (añadidos, modificados, borrados)
 		for (Contacte c : getContactes()) {
 			System.out.println(c.getNom() + " " + c.getCanvi().name() );
 		}
 	}
 
-	// método que añade un email a un contacto existente o crea uno nuevo public
+	// método que añade un email a un contacto existente o crea uno nuevo
 	public void afegeixEmail(String nom, String email) throws Exception {
 		Contacte c = new Contacte(nom);
 		if (esNomExistent(nom)) {
@@ -515,7 +517,9 @@ public class GestorContactes {
 		}
 	}
 
-	// método que gestiona los cambios hechos en la lista
+	/* método que gestiona los cambios hechos en la lista
+	 *  y retorna true cuando se solicita salida
+	 */
 	public boolean processaSortida(String entrada) throws Exception {
 		switch (entrada.toUpperCase()) {
 		case "G":
@@ -535,6 +539,7 @@ public class GestorContactes {
 
 	}
 	
+	// guarda los cambios sobreescribiendo en el fichero
 	public void guardarCanvis() throws Exception {
 		ArrayList<String> linies = new ArrayList<>();
 		List<Contacte> contactes = getContactes();
@@ -544,8 +549,7 @@ public class GestorContactes {
 					contactes.remove(contactes.get(i));
 				}
 			}
-		}	
-		if (!contactes.isEmpty()) {
+
 			for (int i=0; i<contactes.size();i++) {
 				contactes.get(i).setCanvi(Canvi.SENSECANVIS);
 				linies.addAll(contactes.get(i).contacteDetallat());
@@ -648,9 +652,6 @@ public class GestorContactes {
 				System.out.println("No t'entenc");
 			}
 		}
-		System.out.println("has sortit correctament");
-			
-
+		System.out.println("Adéu");
 	}
-
 }

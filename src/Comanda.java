@@ -1,12 +1,12 @@
 
 /*
  * Implementació d'una comanda
-
  *
  * Una comanda té:
  * - un nom
  * - una llista d'arguments possiblement buida
  */
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
