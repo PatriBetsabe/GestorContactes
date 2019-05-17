@@ -1,9 +1,10 @@
+/**
 
-/*
- * Programa que ens permet 
- * gestionar una llista de contactes.
- * 
- * */
+ *@author: Patricia Lamadrid
+ *@see: <a href = "https://github.com/PatriBetsabe/GestorContactes></a>
+ *
+*/
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -13,6 +14,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
+/* Programa que ens permet 
+* gestionar una llista de contactes.
+* 
+* */
 
 public class GestorContactes {
 	private List<Contacte> contactes = new ArrayList<>();
