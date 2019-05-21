@@ -1,19 +1,23 @@
 /**
 
  *@author: Patricia Lamadrid
- *@see: <a href = "https://github.com/PatriBetsabe/GestorContactes></a>
  *
 */
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Console;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.ConsoleHandler;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 
 /* Programa que ens permet 
@@ -377,6 +381,8 @@ public class GestorContactes {
 					contactes.set(posicio, tmp);
 					System.out.println("fet");
 					marcaContacteModificat(c);
+				}else {
+					System.out.println("no faig res");
 				}
 			}else {
 				System.out.println("no es troba el contacte");
@@ -398,6 +404,8 @@ public class GestorContactes {
 					contactes.remove(posicio + 1);
 					System.out.println("fet");
 					marcaContacteModificat(c);
+				}else {
+					System.out.println("no faig res");
 				}
 			}else {
 				System.out.println("no es troba el contacte");
@@ -420,6 +428,8 @@ public class GestorContactes {
 					contactes.set(posicio, tmp);
 					System.out.println("fet");
 					marcaContacteModificat(c);
+				}else {
+					System.out.println("no faig res");
 				}
 			}else {
 				System.out.println("no es troba el contacte");
@@ -442,6 +452,8 @@ public class GestorContactes {
 					contactes.remove(posicio);
 					System.out.println("fet");
 					marcaContacteModificat(c);
+				}else {
+					System.out.println("no faig res");
 				}
 			}else {
 				System.out.println("no es troba el contacte");
@@ -523,6 +535,20 @@ public class GestorContactes {
 			c.setCanvi(Canvi.ELIMINAT);
 		}
 	}
+	
+	//método que comprueba los cambios
+	public boolean hiHaCanvis() {
+		List<Contacte> contactes = getContactes();
+		boolean resultado = false;
+		for (Contacte c : contactes) {
+			if (!c.getCanvi().equals(Canvi.SENSECANVIS)) {
+				resultado = true;
+				break;
+			}
+		}
+		return resultado;
+		
+	}
 
 	/* método que gestiona los cambios hechos en la lista
 	 *  y retorna true cuando se solicita salida
@@ -535,6 +561,23 @@ public class GestorContactes {
 			return true;
 		case "I":
 			System.out.println("Canvis ignorats");
+			return true;
+		case "C":
+			System.out.println("Sortida cancel·lada");
+			return false;
+		default:
+			System.out.println("no t'entenc ");
+			return false;
+		}
+
+	}
+	
+	/* método que retorna true cuando se solicita salida
+	 * sin haber realiado cambios
+	 */
+	public boolean processaSortidaSenseCanvis(String entrada) throws Exception {
+		switch (entrada.toUpperCase()) {
+		case "S":
 			return true;
 		case "C":
 			System.out.println("Sortida cancel·lada");
@@ -586,16 +629,30 @@ public class GestorContactes {
 	 */
 	private static ArrayList<String> readTextFile(String path) throws Exception {
 		ArrayList<String> linies = new ArrayList<String>();
-		FileReader fileReader = new FileReader(path);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String linia = "";
-		while (linia != null) {
-			linia = bufferedReader.readLine();
-			if (linia != null) {
-				linies.add(linia);
+		FileReader fileReader = null;
+		try {
+			fileReader = new FileReader(path);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			String linia = "";
+			while (linia != null) {
+				linia = bufferedReader.readLine();
+				if (linia != null) {
+					linies.add(linia);
+				}
 			}
-		}
-		bufferedReader.close();
+		}catch (FileNotFoundException e) {
+			System.out.println("No es troba el fitxer " + path);
+		} catch (IOException e) {
+            System.out.println("Ops: s'ha produït una excepció d'entrada/sortida: " + e.getMessage());
+        } finally {
+        	try {
+        		if (fileReader != null) {
+        			fileReader.close();
+        		}
+        	}catch (IOException e) {
+                System.out.println("Sí, quan tanques també es pot produir una excepció!: "+ e.getMessage());
+            }
+        }
 		return linies;
 	}
 
@@ -617,13 +674,23 @@ public class GestorContactes {
 			Comanda comanda = Comanda.processaComanda(input);
 			if (!comanda.esComandaDesconeguda()) {
 				if (comanda.getNom().equals("sortir")) {
-					System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
-					System.out.print(">> ");
-					String orden = entrada.nextLine();
-					boolean demanaSortir = entorn.processaSortida(orden);
-					if (demanaSortir) {
-						break;
-					}
+					if (entorn.hiHaCanvis()) {
+						System.out.println("Guardar canvis: G, Ignorar canvis: I, Cancelar: C");
+						System.out.print(">> ");
+						String orden = entrada.nextLine();
+						boolean demanaSortir = entorn.processaSortida(orden);
+						if (demanaSortir) {
+							break;
+						}
+					}else {
+						System.out.println("No s'han fet canvis, vols sortir? Sortir: S, Cancelar: C");
+						System.out.print(">> ");
+						String orden = entrada.nextLine();
+						boolean demanaSortir = entorn.processaSortidaSenseCanvis(orden);
+						if (demanaSortir) {
+							break;
+						}
+					}	
 				}else if (comanda.getNom().equals("ajuda")) {
 					System.out.println(entorn.mostraAjuda());
 				} else if (comanda.getNom().equals("llista")) {

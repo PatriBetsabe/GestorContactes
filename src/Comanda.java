@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Comanda {
-    private static final String[] comandesSenseArgs = { "ajuda", "llista", "canvis", "sortir" };
+    private static final String[] comandesSenseArgs = { "ajuda", "llista", "canvis", "sortir"};
     private static final String[] comandesRegex = {
     	"^afegeix num +([\\p{L} ]+) +([\\w.+]+) *$",
         "^afegeix email +([\\p{L} ]+) +(.+@.+) *$",
